@@ -17,6 +17,7 @@ app.config['MYSQL_DB'] = db['mysql_db']
 mysql = MySQL(app)
 
 @app.route("/", methods=["POST", "GET"])
+@app.route("/index", methods=["POST", "GET"])
 def home():
     if request.method == "POST" :
 
@@ -49,6 +50,10 @@ def home():
             return redirect(url_for("home"))
     else:
         return render_template("index.html")
+
+@app.route("/driver")
+def driver():
+    return render_template("driver.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
