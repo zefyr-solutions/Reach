@@ -50,24 +50,29 @@ def home():
     else:
         return render_template("index.html")
 
-@app.route("/add_user")
+@app.route("/add_user", methods=["POST","GET"])
 def add_user():
     if request.method == 'POST':
-        userDetails = request.form
-        name = userDetails['name']
-        username = userDetails['username']
-        email = userDetails['email']
-        phone = userDetails['phone']
-        password = userDetails['password']
-        cpassword = userDetails['cpassword']
-        if password == cpassword:
-            xpassword = sha256_crypt.encrypt(password)
+
+        if (request.form["name"] == "" or request.form["username"] == "" or request.form["email"] == "" or request.form["phone"] == "" or request.form["password"] == "" or request.form["cpassword"] == ""  or request.form["role"] == ""):
+            flash("Enter all the fields")
         else:
-            flash("Both passwords must be same")
-        cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO users(user_name,name,email,phone_no) VALUES(%s,%s,%s,%s)",(username,name,email,phone))
-        mysql.connection.commit()
-        cur.close()
+            userDetails = request.form
+            name = userDetails['name']
+            username = userDetails['username']
+            email = userDetails['email']
+            phone = userDetails['phone']
+            role = userDetails['role']
+            password = userDetails['password']
+            cpassword = userDetails['cpassword']
+            if password == cpassword:
+                xpassword = argon2.hash(password)
+                cur = mysql.connection.cursor()
+                cur.execute("INSERT INTO users(user_name,name,email,phone_no,role,password) VALUES(%s,%s,%s,%s,%s,%s)",(username,name,email,phone,role,xpassword))
+                mysql.connection.commit()
+                cur.close()
+            else:
+                flash("Both passwords must be same")
     return render_template("add_user.html")
 
 if __name__ == "__main__":
