@@ -1,4 +1,0 @@
-mysql_host: 'localhost'
-mysql_user:  'phpmyadmin'
-mysql_password: 'faiz'
-mysql_db: 'Reach'
