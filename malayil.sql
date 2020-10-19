@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 17, 2020 at 04:59 PM
+-- Generation Time: Oct 19, 2020 at 05:38 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.2.30
 
@@ -94,7 +94,7 @@ CREATE TABLE `users` (
   `password` varchar(128) DEFAULT NULL,
   `name` varchar(128) DEFAULT NULL,
   `email` varchar(128) DEFAULT NULL,
-  `phone_no` int(11) DEFAULT NULL,
+  `phone_no` varchar(15) DEFAULT NULL,
   `role` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -103,9 +103,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `user_name`, `password`, `name`, `email`, `phone_no`, `role`) VALUES
-(1, 'asd', 'asd', 'asd', 'asd', 515, 1),
+(1, 'asd', 'asd', 'asd', 'asd', '515', 1),
 (2, NULL, NULL, 'Raza', 'raz@gmail.com', NULL, NULL),
-(3, NULL, NULL, 'Raza', 'raz@gmail.com', NULL, NULL);
+(3, NULL, NULL, 'Raza', 'raz@gmail.com', NULL, NULL),
+(4, 'user', '$argon2id$v=19$m=102400,t=2,p=8$4nwv5TzH2BtDSKlVCiHEGA$k6XW5CfwsvTCT8sM/am4NQ', 'user', 'user@example.com', '0', 1);
 
 --
 -- Indexes for dumped tables
@@ -164,7 +165,7 @@ ALTER TABLE `sales`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
