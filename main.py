@@ -71,9 +71,29 @@ def add_user():
                 cur.execute("INSERT INTO users(user_name,name,email,phone_no,role,password) VALUES(%s,%s,%s,%s,%s,%s)",(username,name,email,phone,role,xpassword))
                 mysql.connection.commit()
                 cur.close()
+                flash("Records inserted")
             else:
                 flash("Both passwords must be same")
     return render_template("add_user.html")
+
+@app.route("/add_product", methods=["POST","GET"])
+def add_product():
+    if request.method == 'POST':
+
+        if (request.form["pname"] == "" or request.form["bcode"] == "" or request.form["price"] == "" ):
+            flash("Enter all the fields")
+        else:
+            userDetails = request.form
+            pname = userDetails['pname']
+            bcode = userDetails['bcode']
+            price = userDetails['price']
+            cur = mysql.connection.cursor()
+            cur.execute("INSERT INTO products(name,barcode,price) VALUES(%s,%s,%s)",(pname,bcode,price))
+            mysql.connection.commit()
+            cur.close()
+            flash("Records inserted")
+
+    return render_template("add_product.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
