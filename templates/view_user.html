@@ -12,7 +12,8 @@
 {% endwith %}
 
 <h1>View User</h1>
-<table border="3px">
+<table class="table">
+  <thead class="thead-light">
   <tr>
     <th>Username</th>
     <th>Name</th>
@@ -20,9 +21,10 @@
     <th>Phone</th>
     <th>Role</th>
   </tr>
+  </thead>
   {% for row in value %}
     <tr>
-      <td>{{row[0]}}</td>
+      <th>{{row[0]}}</th>
       <td>{{row[1]}}</td>
       <td>{{row[2]}}</td>
       <td>{{row[3]}}</td>
