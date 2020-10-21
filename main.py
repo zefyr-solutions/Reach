@@ -40,7 +40,7 @@ def home():
                 session["user_id"] = row[0]
                 session["role"] = row[2]
                 flash("Login Succesful")
-                return redirect(url_for("home"))
+                return redirect(url_for("driver"))
             else:
                 flash("Login Failed")
                 return redirect(url_for("home"))
@@ -117,5 +117,11 @@ def add_customer():
 
     else:
         return render_template("add_customer.html")
+
+@app.route("/driver")
+def driver():
+    return render_template("driver.html")
+
+
 if __name__ == "__main__":
     app.run(debug=True)
