@@ -74,7 +74,8 @@ def add_user():
                 flash("Records inserted")
             else:
                 flash("Both passwords must be same")
-    return render_template("add_user.html")
+    else:
+        return render_template("add_user.html")
 
 @app.route("/add_product", methods=["POST","GET"])
 def add_product():
@@ -93,7 +94,28 @@ def add_product():
             cur.close()
             flash("Records inserted")
 
-    return render_template("add_product.html")
+    else:
+        return render_template("add_product.html")
 
+@app.route("/add_customer", methods=["POST","GET"])
+def add_customer():
+    if request.method == 'POST':
+
+        if (request.form["name"] == "" or request.form["phone_no"] == "" or request.form["email"] == "" or request.form["location"] == ""):
+            flash("Enter all the fields")
+        else:
+            userDetails = request.form
+            name = userDetails['name']
+            phone_no = userDetails['phone_no']
+            email = userDetails['email']
+            location = userDetails['location']
+            cur = mysql.connection.cursor()
+            cur.execute("INSERT INTO customers(name,phone,email,location) VALUES(%s,%s,%s,%s)",(name,phone_no,email,location))
+            mysql.connection.commit()
+            cur.close()
+            flash("Records inserted")
+
+    else:
+        return render_template("add_customer.html")
 if __name__ == "__main__":
     app.run(debug=True)
