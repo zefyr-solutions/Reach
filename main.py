@@ -123,5 +123,12 @@ def driver():
     return render_template("driver.html")
 
 
+@app.route("/view_user")
+def view_user():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT user_name,name,email,phone_no,role FROM users")
+    rows = cur.fetchall()
+    return render_template("view_user.html", value=rows)
+
 if __name__ == "__main__":
     app.run(debug=True)
