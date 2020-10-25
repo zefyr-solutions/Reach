@@ -56,6 +56,7 @@ def add_user():
 
         if (request.form["name"] == "" or request.form["username"] == "" or request.form["email"] == "" or request.form["phone"] == "" or request.form["password"] == "" or request.form["cpassword"] == ""  or request.form["role"] == ""):
             flash("Enter all the fields")
+            return render_template("add_user.html")
         else:
             userDetails = request.form
             name = userDetails['name']
@@ -72,8 +73,10 @@ def add_user():
                 mysql.connection.commit()
                 cur.close()
                 flash("Records inserted")
+                return render_template("add_user.html")
             else:
                 flash("Both passwords must be same")
+                return render_template("add_user.html")
     else:
         return render_template("add_user.html")
 
@@ -129,6 +132,20 @@ def view_user():
     cur.execute("SELECT user_name,name,email,phone_no,role FROM users")
     rows = cur.fetchall()
     return render_template("view_user.html", value=rows)
+
+@app.route("/view_customer")
+def view_customer():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT name,email,phone,location FROM customers")
+    rows = cur.fetchall()
+    return render_template("view_customer.html", value=rows)
+
+@app.route("/view_product")
+def view_product():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT name,barcode,price FROM products")
+    rows = cur.fetchall()
+    return render_template("view_product.html", value=rows)
 
 if __name__ == "__main__":
     app.run(debug=True)
