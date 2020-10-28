@@ -7,7 +7,7 @@ app = Flask(__name__)
 app.secret_key = "hello"
 
 # Loading database connection data from "resources\db.yaml"
-db = yaml.load(open("resources/db.yaml"))
+db = yaml.load(open("static/db.yaml"))
 
 #Setting up database connection credentials and initialization of MySQL object
 app.config['MYSQL_HOST'] = db['mysql_host']
@@ -56,6 +56,7 @@ def add_user():
 
         if (request.form["name"] == "" or request.form["username"] == "" or request.form["email"] == "" or request.form["phone"] == "" or request.form["password"] == "" or request.form["cpassword"] == ""  or request.form["role"] == ""):
             flash("Enter all the fields")
+            return render_template("add_user.html")
         else:
             userDetails = request.form
             name = userDetails['name']
@@ -72,8 +73,10 @@ def add_user():
                 mysql.connection.commit()
                 cur.close()
                 flash("Records inserted")
+                return render_template("add_user.html")
             else:
                 flash("Both passwords must be same")
+                return render_template("add_user.html")
     else:
         return render_template("add_user.html")
 
@@ -125,10 +128,38 @@ def driver():
 
 @app.route("/view_user")
 def view_user():
+    if request.args.get("customer_id") :
+        customer_id = request.args.get("customer_id")
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT name,email,phone,loaction FROM customers where customer_id = %s ",[customer_id])
+        row = cur.fetchone()
+        return render_template("view_user_specific.html")
+    else :
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT user_name,name,email,phone_no,role FROM users")
+        rows = cur.fetchall()
+        return render_template("view_user.html", value=rows)
+
+@app.route("/view_customer")
+def view_customer():
+    if request.args.get("customer_id") :
+        customer_id = request.args.get("customer_id")
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT name,email,phone,location,customer_id FROM customers where customer_id = %s ",[customer_id])
+        row = cur.fetchone()
+        return render_template("view_customer_specific.html", row=row)
+    else :
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT name,email,phone,location,customer_id FROM customers")
+        rows = cur.fetchall()
+        return render_template("view_customer.html", value=rows)
+
+@app.route("/view_product")
+def view_product():
     cur = mysql.connection.cursor()
-    cur.execute("SELECT user_name,name,email,phone_no,role,user_id FROM users")
+    cur.execute("SELECT name,barcode,price FROM products")
     rows = cur.fetchall()
-    return render_template("view_user.html", value=rows)
+    return render_template("view_product.html", value=rows)
 
 @app.route("/edit_user/<user_id>", methods=["POST","GET"])
 def edit_user(user_id):
