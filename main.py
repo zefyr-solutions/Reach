@@ -136,7 +136,7 @@ def view_user():
         return render_template("view_user_specific.html")
     else :
         cur = mysql.connection.cursor()
-        cur.execute("SELECT user_name,name,email,phone_no,role FROM users")
+        cur.execute("SELECT user_name,name,email,phone_no,role,user_id FROM users")
         rows = cur.fetchall()
         return render_template("view_user.html", value=rows)
 
