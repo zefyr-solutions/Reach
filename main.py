@@ -126,9 +126,50 @@ def driver():
 @app.route("/view_user")
 def view_user():
     cur = mysql.connection.cursor()
-    cur.execute("SELECT user_name,name,email,phone_no,role FROM users")
+    cur.execute("SELECT user_name,name,email,phone_no,role,user_id FROM users")
     rows = cur.fetchall()
     return render_template("view_user.html", value=rows)
+
+@app.route("/edit_user/<user_id>", methods=["POST","GET"])
+def edit_user(user_id):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT name,user_name,email,phone_no,role,password FROM users where user_id = %s",user_id)
+    rows = cur.fetchone()
+    cur.close()
+
+    if request.method == 'POST':
+        if (request.form["name"] == "" or request.form["username"] == "" or request.form["email"] == "" or request.form["phone"] == "" or request.form["password"] == "" or request.form["npassword"] == "" or request.form["cpassword"] == ""  or request.form["role"] == ""):
+            flash("Enter all the fields")
+            return redirect(url_for('edit_user',user_id=user_id))
+        else:
+            userDetails = request.form
+            name = userDetails['name']
+            username = userDetails['username']
+            email = userDetails['email']
+            phone = userDetails['phone']
+            role = userDetails['role']
+            password = userDetails['password']
+            npassword = userDetails['npassword']
+            cpassword = userDetails['cpassword']
+            if (argon2.verify(password,rows[5])):
+                if npassword == cpassword:
+                    xpassword = argon2.hash(npassword)
+                    cur = mysql.connection.cursor()
+                    cur.execute("UPDATE users SET user_name = %s,name = %s,email = %s,phone_no = %s,role = %s,password = %s where user_id = %s",(username,name,email,phone,role,xpassword,user_id) )
+                    mysql.connection.commit()
+                    cur.close()
+                    flash("Records updated")
+                else:
+                    flash("Both passwords must be same")
+                    return redirect(url_for('edit_user',user_id=user_id))
+            else:
+                flash("Current password is not verified")
+                return redirect(url_for('edit_user',user_id=user_id))
+    else:
+        return render_template("edit_user.html",value=rows, user_id=user_id)
+
+    return redirect(url_for('view_user'))
+
 
 if __name__ == "__main__":
     app.run(debug=True)
