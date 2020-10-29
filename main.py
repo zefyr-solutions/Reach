@@ -201,6 +201,9 @@ def edit_user(user_id):
 
     return redirect(url_for('view_user'))
 
+@app.route("/sales")
+def sales():
+    return render_template("sales.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
