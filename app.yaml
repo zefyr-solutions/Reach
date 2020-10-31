@@ -1,5 +1,11 @@
 runtime: python38
 
+env_variables:
+  CLOUD_SQL_USERNAME: root
+  CLOUD_SQL_PASSWORD: pass
+  CLOUD_SQL_DATABASE_NAME: malayil
+  CLOUD_SQL_CONNECTION_NAME: reach-294116:us-central1:malayil
+
 handlers:
   # This configures Google App Engine to serve the files in the app's static
   # directory.

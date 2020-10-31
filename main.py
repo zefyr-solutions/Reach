@@ -2,6 +2,7 @@ from flask import Flask, redirect, render_template, session, flash, url_for, req
 from flask_mysqldb import MySQL
 from passlib.hash import argon2
 import yaml
+import os
 
 app = Flask(__name__)
 app.secret_key = "hello"
@@ -10,10 +11,11 @@ app.secret_key = "hello"
 db = yaml.load(open("db.yaml"))
 
 #Setting up database connection credentials and initialization of MySQL object
-app.config['MYSQL_HOST'] = db['mysql_host']
-app.config['MYSQL_USER'] = db['mysql_user']
-app.config['MYSQL_PASSWORD'] = db['mysql_password']
-app.config['MYSQL_DB'] = db['mysql_db']
+db_user = os.environ.get('CLOUD_SQL_USERNAME')
+db_password = os.environ.get('CLOUD_SQL_PASSWORD')
+db_name = os.environ.get('CLOUD_SQL_DATABASE_NAME')
+db_connection_name = os.environ.get('CLOUD_SQL_CONNECTION_NAME')
+
 mysql = MySQL(app)
 
 @app.route("/", methods=["POST", "GET"])
