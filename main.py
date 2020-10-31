@@ -74,14 +74,14 @@ def add_user():
                     mysql.connection.commit()
                     cur.close()
                     flash("Records inserted")
-                    return render_template("add_user.html")
+                    return redirect(url_for("view_user"))
                 else:
                     flash("Both passwords must be same")
-                    return render_template("add_user.html")
+                    return redirect(url_for("add_user"))
         else:
                     return render_template("add_user.html")
     else:
-        return "Login first"
+        return redirect(url_for('static', filename='403-forbidden-error.jpg'))
 
 @app.route("/add_product", methods=["POST","GET"])
 def add_product():
@@ -100,11 +100,12 @@ def add_product():
                 mysql.connection.commit()
                 cur.close()
                 flash("Records inserted")
+                return redirect(url_for("view_product"))
 
         else:
             return render_template("add_product.html")
     else:
-        return "Login first"
+        return redirect(url_for('static', filename='403-forbidden-error.jpg'))
 
 @app.route("/add_customer", methods=["POST","GET"])
 def add_customer():
@@ -124,11 +125,12 @@ def add_customer():
                 mysql.connection.commit()
                 cur.close()
                 flash("Records inserted")
+                return redirect(url_for("view_customer"))
 
         else:
             return render_template("add_customer.html")
     else:
-        return "Login First"
+        return redirect(url_for('static', filename='403-forbidden-error.jpg'))
 
 @app.route("/driver")
 def driver():
@@ -150,7 +152,7 @@ def view_user():
             rows = cur.fetchall()
             return render_template("view_user.html", value=rows)
     else:
-        return "Login First"
+        return redirect(url_for('static', filename='403-forbidden-error.jpg'))
 
 @app.route("/view_customer")
 def view_customer():
@@ -167,7 +169,7 @@ def view_customer():
             rows = cur.fetchall()
             return render_template("view_customer.html", value=rows)
     else :
-        return "Login First"
+        return redirect(url_for('static', filename='403-forbidden-error.jpg'))
 
 @app.route("/view_product")
 def view_product():
@@ -177,7 +179,7 @@ def view_product():
         rows = cur.fetchall()
         return render_template("view_product.html", value=rows)
     else:
-        return "Login First"
+        return redirect(url_for('static', filename='403-forbidden-error.jpg'))
 
 
 @app.route("/edit_user/<user_id>", methods=["POST","GET"])
@@ -210,6 +212,7 @@ def edit_user(user_id):
                         mysql.connection.commit()
                         cur.close()
                         flash("Records updated")
+                        return redirect(url_for("view_user"))
                     else:
                         flash("Both passwords must be same")
                         return redirect(url_for('edit_user',user_id=user_id))
@@ -219,9 +222,8 @@ def edit_user(user_id):
         else:
             return render_template("edit_user.html",value=rows, user_id=user_id)
 
-        return redirect(url_for('view_user'))
     else:
-        return "Login First"
+        return redirect(url_for('static', filename='403-forbidden-error.jpg'))
 
 @app.route("/edit_product/<product_id>", methods=["POST","GET"])
 def edit_product(product_id):
@@ -251,7 +253,7 @@ def edit_product(product_id):
         else:
             return render_template("edit_product.html",value=rows ,product_id=product_id)
     else:
-        return "Login first"
+        return redirect(url_for('static', filename='403-forbidden-error.jpg'))
 
 @app.route("/edit_customer/<customer_id>", methods=["POST","GET"])
 def edit_customer(customer_id):
@@ -280,7 +282,7 @@ def edit_customer(customer_id):
         else:
             return render_template("edit_customer.html",value=row, customer_id=customer_id)
     else:
-        return "Login First"
+        return redirect(url_for('static', filename='403-forbidden-error.jpg'))
 
 
 @app.route("/logout")
