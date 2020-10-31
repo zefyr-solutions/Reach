@@ -10,19 +10,22 @@
     </ul>
   {% endif %}
 {% endwith %}
-        <form method = "post">
-            <div class="form-group">
-              <label for="exampleInputEmail1">User name</label>
-              <input type="text" class="form-control" id="exampleInputEmail1" name="user_name" placeholder="Enter UserId">
-            </div>
-            <div class="form-group">
-              <label for="exampleInputPassword1">Password</label>
-              <input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="Password">
-            </div>
-            <div class="form-group form-check">
-              <input type="checkbox" class="form-check-input" id="exampleCheck1">
-              <label class="form-check-label" for="exampleCheck1">Check me out</label>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">Submit</button>
-          </form>
+<div class="d-flex flex-column justify-content-center align-items-center w-100">
+  <h2 class="m-4">Login!</h2>
+  <form method = "post" class="w-100">
+    <div class="form-group">
+      <!-- <label for="exampleInputEmail1">User name</label> -->
+      <input type="text" class="form-control p-4" id="exampleInputEmail1" name="user_name" placeholder="Enter UserId">
+    </div>
+    <div class="form-group">
+      <!-- <label for="exampleInputPassword1">Password</label> -->
+      <input type="password" class="form-control p-4" id="exampleInputPassword1" name="password" placeholder="Password">
+    </div>
+    <div class="form-group form-check">
+      <input type="checkbox" class="form-check-input" id="exampleCheck1">
+      <label class="form-check-label" for="exampleCheck1">Check me out</label>
+    </div>
+    <button type="submit" class="btn btn-primary btn-block p-3">Submit</button>
+  </form>
+</div>
 {% endblock %}

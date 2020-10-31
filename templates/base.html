@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-100">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +7,9 @@
     
     <title>{% block title %}{% endblock %}</title>
 </head>
-<body>
-    <div class="container-fluid">
-        <div class="container p-3 mt-3">
-            {% block content %}{% endblock %}
-        </div>
+<body class="d-flex h-100">
+    <div class="container justify-content-center d-flex p-3">
+        {% block content %}{% endblock %}
     </div>
 </body>
 </html>
