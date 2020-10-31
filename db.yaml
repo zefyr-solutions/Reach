@@ -1,4 +1,5 @@
-mysql_host: '127.0.0.1'
-mysql_user:  'user'
-mysql_password: 'pass'
-mysql_db: 'malayil'
+env_variables:
+  CLOUD_SQL_USERNAME: root
+  CLOUD_SQL_PASSWORD: pass
+  CLOUD_SQL_DATABASE_NAME: malayil
+  CLOUD_SQL_CONNECTION_NAME: reach-294116:us-central1:malayil

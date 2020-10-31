@@ -2,7 +2,6 @@ from flask import Flask, redirect, render_template, session, flash, url_for, req
 from flask_mysqldb import MySQL
 from passlib.hash import argon2
 import yaml
-import os
 
 app = Flask(__name__)
 app.secret_key = "hello"
@@ -15,7 +14,6 @@ db_user = os.environ.get('CLOUD_SQL_USERNAME')
 db_password = os.environ.get('CLOUD_SQL_PASSWORD')
 db_name = os.environ.get('CLOUD_SQL_DATABASE_NAME')
 db_connection_name = os.environ.get('CLOUD_SQL_CONNECTION_NAME')
-
 mysql = MySQL(app)
 
 @app.route("/", methods=["POST", "GET"])
@@ -224,8 +222,14 @@ def edit_user(user_id):
         else:
             return render_template("edit_user.html",value=rows, user_id=user_id)
 
+<<<<<<< HEAD
+        return redirect(url_for('view_user'))
+    else:
+        return "Login First"
+=======
     else:
         return redirect(url_for('static', filename='403-forbidden-error.jpg'))
+>>>>>>> 8501d82ce4e538fa7354118bcf761a2002704671
 
 @app.route("/edit_product/<product_id>", methods=["POST","GET"])
 def edit_product(product_id):
@@ -255,7 +259,11 @@ def edit_product(product_id):
         else:
             return render_template("edit_product.html",value=rows ,product_id=product_id)
     else:
+<<<<<<< HEAD
+        return "Login first"
+=======
         return redirect(url_for('static', filename='403-forbidden-error.jpg'))
+>>>>>>> 8501d82ce4e538fa7354118bcf761a2002704671
 
 @app.route("/edit_customer/<customer_id>", methods=["POST","GET"])
 def edit_customer(customer_id):
@@ -284,7 +292,11 @@ def edit_customer(customer_id):
         else:
             return render_template("edit_customer.html",value=row, customer_id=customer_id)
     else:
+<<<<<<< HEAD
+        return "Login First"
+=======
         return redirect(url_for('static', filename='403-forbidden-error.jpg'))
+>>>>>>> 8501d82ce4e538fa7354118bcf761a2002704671
 
 
 @app.route("/logout")
