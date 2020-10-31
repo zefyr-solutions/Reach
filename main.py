@@ -7,7 +7,7 @@ app = Flask(__name__)
 app.secret_key = "hello"
 
 # Loading database connection data from "resources\db.yaml"
-db = yaml.load(open("static/db.yaml"))
+db = yaml.load(open("db.yaml"))
 
 #Setting up database connection credentials and initialization of MySQL object
 app.config['MYSQL_HOST'] = db['mysql_host']
