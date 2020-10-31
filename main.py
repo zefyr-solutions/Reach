@@ -296,6 +296,9 @@ def logout():
     return redirect(url_for('home'))
 
 
+@app.route("/sales")
+def sales():
+    return render_template("sales.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
