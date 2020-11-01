@@ -7,9 +7,11 @@
     
     <title>{% block title %}{% endblock %}</title>
 </head>
-<body class="d-flex h-100">
+<body class="d-flex h-100 text-dark">
     <div class="d-flex flex-column justify-content-center align-items-center w-100">
+        <div class="container m-5">
         {% block content %}{% endblock %}
+        </div>
     </div>
 </body>
 </html>

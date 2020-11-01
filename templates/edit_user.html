@@ -10,8 +10,8 @@
     </ul>
   {% endif %}
 {% endwith %}
-
-<h1>Edit User {{value[0]}}</h1>
+<div class="container mt-5">
+<h2>Edit User {{value[0]}}</h2>
 
 <form action="#" method="post">
   <div class="form-group">
@@ -46,9 +46,8 @@
     <label for="role">Role (Driver(0), Admin(1))</label>
     <input type="number" class="form-control" id="role"  name="role" value={{value[4]}}>
   </div>
-  <button type="submit" class="btn btn-primary btn-block">Submit</button>
-
-
+  <button type="submit" class="btn btn-danger btn-block">Submit</button>
 </form>
+</div>
 
 {% endblock %}
