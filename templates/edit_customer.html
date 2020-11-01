@@ -1,15 +1,6 @@
 {% extends 'base.html'%}
 {% block title %} Edit Customer {% endblock %}
 {% block content %}
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class=flashes>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
 
 <h1>Edit Customer {{value[0]}}</h1>
 <form action="#" method="post">
