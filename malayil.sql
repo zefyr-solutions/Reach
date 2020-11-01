@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.3
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Oct 31, 2020 at 07:36 AM
--- Server version: 10.4.14-MariaDB
--- PHP Version: 7.4.11
+-- Host: 127.0.0.1
+-- Generation Time: Nov 01, 2020 at 05:07 AM
+-- Server version: 10.4.11-MariaDB
+-- PHP Version: 7.2.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -39,7 +39,9 @@ CREATE TABLE `customers` (
 -- Dumping data for table `customers`
 --
 
-UPDATE `customers` SET `customer_id` = 1,`name` = 'asd',`email` = 'asd@gmail.com',`phone` = 515,`location` = 'asd' WHERE `customers`.`customer_id` = 1;
+INSERT INTO `customers` (`customer_id`, `name`, `email`, `phone`, `location`) VALUES
+(1, 'asd', 'asd', 515, 'asd'),
+(2, 'RAZA ILTHAMISH', 'razabinashraf@gmail.com', 960555869, 'kottakkal');
 
 -- --------------------------------------------------------
 
@@ -58,8 +60,8 @@ CREATE TABLE `products` (
 -- Dumping data for table `products`
 --
 
-UPDATE `products` SET `product_id` = 1,`name` = 'asd',`barcode` = 151,`price` = 153 WHERE `products`.`product_id` = 1;
-UPDATE `products` SET `product_id` = 2,`name` = 'asd',`barcode` = 151,`price` = 152 WHERE `products`.`product_id` = 2;
+INSERT INTO `products` (`product_id`, `name`, `barcode`, `price`) VALUES
+(1, 'asd', 151, 151);
 
 -- --------------------------------------------------------
 
@@ -71,15 +73,15 @@ CREATE TABLE `sales` (
   `sales_id` int(11) NOT NULL,
   `customer_id` int(11) DEFAULT NULL,
   `product_id` int(11) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `user_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `sales`
 --
 
-UPDATE `sales` SET `sales_id` = 1,`customer_id` = 1,`product_id` = 1,`user_id` = 1,`timestamp` = '2020-10-30 18:04:57' WHERE `sales`.`sales_id` = 1;
+INSERT INTO `sales` (`sales_id`, `customer_id`, `product_id`, `user_id`) VALUES
+(1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -101,11 +103,13 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-UPDATE `users` SET `user_id` = 1,`user_name` = 'asd',`password` = '$argon2id$v=19$m=102400,t=2,p=8$Yux9DwFAKMX4/x8DQEiJcQ$mGqoi7QrsnFojaVTXdZBcg\r\n\r\n',`name` = 'asd',`email` = 'asd',`phone_no` = '515',`role` = 1 WHERE `users`.`user_id` = 1;
-UPDATE `users` SET `user_id` = 2,`user_name` = NULL,`password` = NULL,`name` = 'Raza',`email` = 'raz@gmail.com',`phone_no` = NULL,`role` = NULL WHERE `users`.`user_id` = 2;
-UPDATE `users` SET `user_id` = 3,`user_name` = NULL,`password` = NULL,`name` = 'Raza',`email` = 'raz@gmail.com',`phone_no` = NULL,`role` = NULL WHERE `users`.`user_id` = 3;
-UPDATE `users` SET `user_id` = 4,`user_name` = 'user',`password` = '$argon2id$v=19$m=102400,t=2,p=8$4nwv5TzH2BtDSKlVCiHEGA$k6XW5CfwsvTCT8sM/am4NQ',`name` = 'user',`email` = 'user@example.com',`phone_no` = '0',`role` = 1 WHERE `users`.`user_id` = 4;
-UPDATE `users` SET `user_id` = 5,`user_name` = 'balal',`password` = '$argon2id$v=19$m=102400,t=2,p=8$CYGw1pqTUsrZmxPiXAthjA$2G+0BDMXPKOPb+OSw9duJg',`name` = 'balal',`email` = 'balal@gmail.com',`phone_no` = '9876543210',`role` = 0 WHERE `users`.`user_id` = 5;
+INSERT INTO `users` (`user_id`, `user_name`, `password`, `name`, `email`, `phone_no`, `role`) VALUES
+(1, 'asd', 'asd', 'asd', 'asd', '515', 1),
+(2, NULL, NULL, 'Raza', 'raz@gmail.com', NULL, NULL),
+(3, NULL, NULL, 'Raza', 'raz@gmail.com', NULL, NULL),
+(4, 'user', '$argon2id$v=19$m=102400,t=2,p=8$4nwv5TzH2BtDSKlVCiHEGA$k6XW5CfwsvTCT8sM/am4NQ', 'user', 'user@example.com', '0', 1),
+(5, 'ghjkl', '$argon2id$v=19$m=102400,t=2,p=8$pdSak7K2VsoZAyDkfA9hzA$AR3iaiBDj3bYsdam/Q+YMA', 'RAZA ILTHAMISH', 'razabinashraf@gmail.com', '09605558696', 1),
+(6, 'qwer', '$argon2id$v=19$m=102400,t=2,p=8$KKX0vheidA4BwHivVYrx/g$RyiSmwLJgK7oWqMb/erUmg', 'RAZA ILTHAMISH', 'razabinashraf@gmail.com', '09605558696', 1);
 
 --
 -- Indexes for dumped tables
@@ -146,13 +150,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `sales`
