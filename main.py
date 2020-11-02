@@ -1,23 +1,18 @@
 from flask import Flask, redirect, render_template, session, flash, url_for, request
 from flask_mysqldb import MySQL
 from passlib.hash import argon2
+from db import connect
 import yaml
+import os
+import pymysql
 
 app = Flask(__name__)
 app.secret_key = "hello"
 
-# Loading database connection data from "resources\db.yaml"
-db = yaml.load(open("db.yaml"))
-
-#Setting up database connection credentials and initialization of MySQL object
-app.config['MYSQL_HOST'] = db['mysql_host']
-app.config['MYSQL_USER'] = db['mysql_user']
-app.config['MYSQL_PASSWORD'] = db['mysql_password']
-app.config['MYSQL_DB'] = db['mysql_db']
-mysql = MySQL(app)
 
 @app.route("/", methods=["POST", "GET"])
 def home():
+
     if request.method == "POST" :
 
         #If no input, redirect back
@@ -29,10 +24,11 @@ def home():
         password = request.form["password"]
 
         #Checking with database for username and password
-        cur = mysql.connection.cursor()
-        cur.execute("SELECT user_id,password,role FROM users where user_name = %s ",[user_name])
-        row = cur.fetchone()
-
+        cnx = connect()
+        with cnx.cursor() as cur:
+            cur.execute("SELECT user_id,password,role FROM users where user_name = %s ",[user_name])
+            row = cur.fetchone()
+        cnx.close()
         #If username is found on database,
         if row:
             #Checking password is correct or not
@@ -69,10 +65,11 @@ def add_user():
                 cpassword = userDetails['cpassword']
                 if password == cpassword:
                     xpassword = argon2.hash(password)
-                    cur = mysql.connection.cursor()
-                    cur.execute("INSERT INTO users(user_name,name,email,phone_no,role,password) VALUES(%s,%s,%s,%s,%s,%s)",(username,name,email,phone,role,xpassword))
-                    mysql.connection.commit()
-                    cur.close()
+                    cnx = connect()
+                    with cnx.cursor() as cur:
+                        cur.execute("INSERT INTO users(user_name,name,email,phone_no,role,password) VALUES(%s,%s,%s,%s,%s,%s)",(username,name,email,phone,role,xpassword))
+                    cnx.commit()
+                    cnx.close()
                     flash("Records inserted")
                     return redirect(url_for("view_user"))
                 else:
@@ -95,10 +92,11 @@ def add_product():
                 pname = userDetails['pname']
                 bcode = userDetails['bcode']
                 price = userDetails['price']
-                cur = mysql.connection.cursor()
-                cur.execute("INSERT INTO products(name,barcode,price) VALUES(%s,%s,%s)",(pname,bcode,price))
-                mysql.connection.commit()
-                cur.close()
+                cnx = connect()
+                with cnx.cursor() as cur:
+                    cur.execute("INSERT INTO products(name,barcode,price) VALUES(%s,%s,%s)",(pname,bcode,price))
+                cnx.commit()
+                cnx.close()
                 flash("Records inserted")
                 return redirect(url_for("view_product"))
 
@@ -120,10 +118,11 @@ def add_customer():
                 phone_no = userDetails['phone_no']
                 email = userDetails['email']
                 location = userDetails['location']
-                cur = mysql.connection.cursor()
-                cur.execute("INSERT INTO customers(name,phone,email,location) VALUES(%s,%s,%s,%s)",(name,phone_no,email,location))
-                mysql.connection.commit()
-                cur.close()
+                cnx = connect()
+                with cnx.cursor() as cur:
+                    cur.execute("INSERT INTO customers(name,phone,email,location) VALUES(%s,%s,%s,%s)",(name,phone_no,email,location))
+                cnx.commit()
+                cnx.close()
                 flash("Records inserted")
                 return redirect(url_for("view_customer"))
 
@@ -142,14 +141,17 @@ def view_user():
     if 'user_id' in session:
         if request.args.get("customer_id") :
             customer_id = request.args.get("customer_id")
-            cur = mysql.connection.cursor()
-            cur.execute("SELECT name,email,phone,loaction FROM customers where customer_id = %s ",[customer_id])
-            row = cur.fetchone()
+            cnx = connect()
+            with cnx.cursor() as cur:
+                cur.execute("SELECT name,email,phone,loaction FROM customers where customer_id = %s ",[customer_id])
+                row = cur.fetchone()
             return render_template("view_user_specific.html")
         else :
-            cur = mysql.connection.cursor()
-            cur.execute("SELECT user_name,name,email,phone_no,role,user_id FROM users")
-            rows = cur.fetchall()
+            cnx = connect()
+            with cnx.cursor() as cur:
+                cur.execute("SELECT user_name,name,email,phone_no,role,user_id FROM users")
+                rows = cur.fetchall()
+            cnx.close()
             return render_template("view_user.html", value=rows)
     else:
         return redirect(url_for('static', filename='403-forbidden-error.jpg'))
@@ -159,14 +161,18 @@ def view_customer():
     if 'user_id' in session:
         if request.args.get("customer_id") :
             customer_id = request.args.get("customer_id")
-            cur = mysql.connection.cursor()
-            cur.execute("SELECT name,email,phone,location,customer_id FROM customers where customer_id = %s ",[customer_id])
-            row = cur.fetchone()
+            cnx = connect()
+            with cnx.cursor() as cur:
+                cur.execute("SELECT name,email,phone,location,customer_id FROM customers where customer_id = %s ",[customer_id])
+                row = cur.fetchone()
+            cnx.close()
             return render_template("view_customer_specific.html", row=row)
         else :
-            cur = mysql.connection.cursor()
-            cur.execute("SELECT name,email,phone,location,customer_id FROM customers")
-            rows = cur.fetchall()
+            cnx = connect()
+            with cnx.cursor() as cur:
+                cur.execute("SELECT name,email,phone,location,customer_id FROM customers")
+                rows = cur.fetchall()
+            cnx.close()
             return render_template("view_customer.html", value=rows)
     else :
         return redirect(url_for('static', filename='403-forbidden-error.jpg'))
@@ -174,9 +180,11 @@ def view_customer():
 @app.route("/view_product")
 def view_product():
     if 'user_id' in session:
-        cur = mysql.connection.cursor()
-        cur.execute("SELECT name,barcode,price FROM products")
-        rows = cur.fetchall()
+        cnx = connect()
+        with cnx.cursor() as cur:
+            cur.execute("SELECT name,barcode,price FROM products")
+            rows = cur.fetchall()
+        cnx.close()
         return render_template("view_product.html", value=rows)
     else:
         return redirect(url_for('static', filename='403-forbidden-error.jpg'))
@@ -185,10 +193,11 @@ def view_product():
 @app.route("/edit_user/<user_id>", methods=["POST","GET"])
 def edit_user(user_id):
     if 'user_id' in session:
-        cur = mysql.connection.cursor()
-        cur.execute("SELECT name,user_name,email,phone_no,role,password FROM users where user_id = %s",user_id)
-        rows = cur.fetchone()
-        cur.close()
+        cnx = connect()
+        with cnx.cursor() as cur:
+            cur.execute("SELECT name,user_name,email,phone_no,role,password FROM users where user_id = %s",user_id)
+            rows = cur.fetchone()
+        cnx.close()
 
         if request.method == 'POST':
             if (request.form["name"] == "" or request.form["username"] == "" or request.form["email"] == "" or request.form["phone"] == "" or request.form["password"] == "" or request.form["npassword"] == "" or request.form["cpassword"] == ""  or request.form["role"] == ""):
@@ -207,10 +216,11 @@ def edit_user(user_id):
                 if (argon2.verify(password,rows[5])):
                     if npassword == cpassword:
                         xpassword = argon2.hash(npassword)
-                        cur = mysql.connection.cursor()
-                        cur.execute("UPDATE users SET user_name = %s,name = %s,email = %s,phone_no = %s,role = %s,password = %s where user_id = %s",(username,name,email,phone,role,xpassword,user_id) )
-                        mysql.connection.commit()
-                        cur.close()
+                        cnx = connect()
+                        with cnx.cursor() as cur:
+                            cur.execute("UPDATE users SET user_name = %s,name = %s,email = %s,phone_no = %s,role = %s,password = %s where user_id = %s",(username,name,email,phone,role,xpassword,user_id) )
+                        cnx.commit()
+                        cnx.close()
                         flash("Records updated")
                         return redirect(url_for("view_user"))
                     else:
@@ -228,9 +238,11 @@ def edit_user(user_id):
 @app.route("/edit_product/<product_id>", methods=["POST","GET"])
 def edit_product(product_id):
     if 'user_id' in session:
-        cur = mysql.connection.cursor()
-        cur.execute("SELECT name,barcode,price,product_id FROM products where product_id = %s",product_id)
-        rows = cur.fetchone()
+        cnx = connect()
+        with cnx.cursor() as cur:
+            cur.execute("SELECT name,barcode,price,product_id FROM products where product_id = %s",product_id)
+            rows = cur.fetchone()
+        cnx.close()
 
         if request.method == 'POST':
 
@@ -243,10 +255,11 @@ def edit_product(product_id):
                 pname = userDetails['pname']
                 bcode = userDetails['bcode']
                 price = userDetails['price']
-                cur = mysql.connection.cursor()
-                cur.execute("UPDATE products SET name = %s,barcode = %s,price = %s where product_id = %s",(pname,bcode,price,product_id))
-                mysql.connection.commit()
-                cur.close()
+                cnx = connect()
+                with cnx.cursor() as cur:
+                    cur.execute("UPDATE products SET name = %s,barcode = %s,price = %s where product_id = %s",(pname,bcode,price,product_id))
+                cnx.commit()
+                cnx.close()
                 flash("Records Updated")
                 return redirect(url_for('view_user'))
 
@@ -258,9 +271,11 @@ def edit_product(product_id):
 @app.route("/edit_customer/<customer_id>", methods=["POST","GET"])
 def edit_customer(customer_id):
     if 'user_id' in session:
-        cur = mysql.connection.cursor()
-        cur.execute("SELECT name,email,phone,location,customer_id FROM customers where customer_id = %s ",customer_id)
-        row = cur.fetchone()
+        cnx = connect()
+        with cnx.cursor() as cur:
+            cur.execute("SELECT name,email,phone,location,customer_id FROM customers where customer_id = %s ",customer_id)
+            row = cur.fetchone()
+        cnx.close()
         if request.method == 'POST':
 
             if (request.form["name"] == "" or request.form["phone_no"] == "" or request.form["email"] == "" or request.form["location"] == ""):
@@ -272,10 +287,11 @@ def edit_customer(customer_id):
                 phone_no = userDetails['phone_no']
                 email = userDetails['email']
                 location = userDetails['location']
-                cur = mysql.connection.cursor()
-                cur.execute("UPDATE customers SET name = %s,phone = %s,email = %s,location = %s where customer_id = %s",(name,phone_no,email,location,customer_id))
-                mysql.connection.commit()
-                cur.close()
+                cnx = connect()
+                with cnx.cursor() as cur:
+                    cur.execute("UPDATE customers SET name = %s,phone = %s,email = %s,location = %s where customer_id = %s",(name,phone_no,email,location,customer_id))
+                cnx.commit()
+                cnx.close()
                 flash("Records updated")
                 return redirect(url_for('view_customer'))
 
