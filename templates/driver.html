@@ -1,19 +1,11 @@
 {% extends 'base.html' %}
 {% block title %}Driver{% endblock %}
 {% block content %}
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class=flashes>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
-<div class="container-fluid">
-    <div class="container p-3 mt-3 align-bottom">
-        <a class="btn btn-primary d-block py-5" href="#" role="button">Sale</a>
-        <a class="btn btn-primary d-block mt-5 py-5" href="#" role="button">Report</a>
-    </div>
+
+<div class="container">
+  <div class="d-flex flex-row p-3 mt-3">
+    <a class="btn btn-primary d-block flex-fill p-5 mr-3" href="#" role="button"><h3>Report</h3></a>
+    <a class="btn btn-primary d-block flex-fill p-5 ml-3 align-items-end" href="/sales" role="button"><h3>Sale</h3></a>
+  </div>
 </div>
 {% endblock  %}
