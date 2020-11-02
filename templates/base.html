@@ -8,14 +8,14 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body class="d-flex h-100 text-dark">
-    <div class="alert alert-danger" id="flash" role="alert">
+    <div class="alert alert-danger d-flex justify-content-between" id="flash" role="alert">
         {% with messages = get_flashed_messages() %}
           {% if messages %}
             <!-- <ul class=flashes> -->
             {% for message in messages %}
-              {{ message }}
+              <p class="alert_msg">{{ message }}</p>
             {% endfor %}
-            <button type="button" class="close" onclick="document.getElementById('flash').style.display='none'">
+            <button type="button" class="close" onclick="document.getElementById('flash').style.visibility='hidden'">
               <span aria-hidden="true">&times;</span>
             </button>
             <!-- </ul> -->
