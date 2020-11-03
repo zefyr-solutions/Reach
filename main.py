@@ -289,6 +289,7 @@ def edit_customer(customer_id):
 def logout():
     if 'user_id' in session:
         session.pop('user_id',None)
+        flash("You have been logged out")
 
     if 'role' in session:
         session.pop('role',None)
