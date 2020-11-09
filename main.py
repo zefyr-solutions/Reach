@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, session, flash, url_for, request
+from flask import Flask, redirect, render_template, session, flash, url_for, request, make_response, send_from_directory
 from flask_mysqldb import MySQL
 from passlib.hash import argon2
 from db import connect
@@ -8,7 +8,6 @@ import pymysql
 
 app = Flask(__name__)
 app.secret_key = "hello"
-
 
 @app.route("/", methods=["POST", "GET"])
 def home():
@@ -315,6 +314,13 @@ def logout():
 @app.route("/sales")
 def sales():
     return render_template("sales.html")
+
+# @app.route("/sw.js")
+# def sw():
+#     response = make_response(send_from_directory('static',filename='sw.js'))
+#     response.headers['content-type'] = 'application/javascript'
+#     # response.headers['Service-Worker-Allowed:'] = '/'
+#     return response
 
 if __name__ == "__main__":
     app.run(debug=True)
