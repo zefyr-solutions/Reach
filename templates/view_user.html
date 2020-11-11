@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% block title %}View User{% endblock %}
 {% block content %}
-
+ <script src="static/js/jsdb_connection.js"></script>
 <h1>View User</h1>
+<span id = "pass"></span>
 <table class="table">
   <thead class="thead-light">
   <tr>
@@ -12,6 +13,7 @@
     <th>Phone</th>
     <th>Role</th>
     <th>Edit</th>
+    <th>Delete</th>
   </tr>
   </thead>
   {% for row in value %}
@@ -28,7 +30,18 @@
         {% endif %}
       </td>
       <td><a href="edit_user/{{row[5]}}"> <-Edit </a></td>
+      <td>
+     <button id="demo{{row[5]}}">Delete</button>
+      </td>
     </tr>
+    <script type="text/javascript">
+      document.getElementById("demo{{row[5]}}").addEventListener("click", x);
+        function x() {
+          document.getElementById("pass").innerHTML='<form action="#" method="POST"><div class="form-group"><label for="password">Enter your Password {{session['user_name']}} :</label><input type="password" class="form-control" id="password"  name="password" placeholder="Password" required><input type="hidden" id = "dltuser" name="dltuser" value={{row[5]}}></div><button type="submit" class="btn btn-primary btn-block">Submit</button></form> {{row[5]}}';
+        }
+
+    </script>
+
   {% endfor %}
 
 </table>

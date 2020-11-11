@@ -25,7 +25,7 @@ def home():
         #Checking with database for username and password
         cnx = connect()
         with cnx.cursor() as cur:
-            cur.execute("SELECT user_id,password,role FROM users where user_name = %s ",[user_name])
+            cur.execute("SELECT user_id,password,role,user_name FROM users where user_name = %s ",[user_name])
             row = cur.fetchone()
         cnx.close()
         #If username is found on database,
@@ -34,6 +34,7 @@ def home():
             if (argon2.verify(password,row[1])):
                 session["user_id"] = row[0]
                 session["role"] = row[2]
+                session["user_name"] = row[3]
                 flash("Login Succesful")
                 return redirect(url_for("driver"))
             else:
@@ -135,9 +136,30 @@ def driver():
     return render_template("driver.html")
 
 
-@app.route("/view_user")
+@app.route("/view_user", methods=["POST","GET"])
 def view_user():
     if 'user_id' in session:
+        if request.method == "POST" :
+            userDetails = request.form
+            password = userDetails['password']
+            dltuser = userDetails['dltuser']
+            cnx = connect()
+            with cnx.cursor() as cur:
+                cur.execute("SELECT password FROM users where user_id = %s ",session['user_id'])
+                row = cur.fetchone()
+            cnx.close()
+            if (argon2.verify(password,row[0])):
+                cnx = connect()
+                with cnx.cursor() as cur:
+                    cur.execute("DELETE FROM users WHERE user_id =%s",dltuser)
+                    cnx.commit()
+                    cnx.close()
+
+                flash("Row Deletion Succesful")
+                return redirect(url_for("view_user"))
+            else :
+                flash("Please enter the Correct Password ")
+                return redirect(url_for("view_user"))
         if request.args.get("customer_id") :
             customer_id = request.args.get("customer_id")
             cnx = connect()
