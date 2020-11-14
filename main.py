@@ -78,7 +78,7 @@ def add_user():
         else:
                     return render_template("add_user.html")
     else:
-        return redirect(url_for('static', filename='403-forbidden-error.jpg'))
+        return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
 
 @app.route("/add_product", methods=["POST","GET"])
 def add_product():
@@ -103,7 +103,7 @@ def add_product():
         else:
             return render_template("add_product.html")
     else:
-        return redirect(url_for('static', filename='403-forbidden-error.jpg'))
+        return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
 
 @app.route("/add_customer", methods=["POST","GET"])
 def add_customer():
@@ -129,11 +129,14 @@ def add_customer():
         else:
             return render_template("add_customer.html")
     else:
-        return redirect(url_for('static', filename='403-forbidden-error.jpg'))
+        return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
 
 @app.route("/driver")
 def driver():
-    return render_template("driver.html")
+    if 'user_id' in session:
+        return render_template("driver.html")
+    else :
+        return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
 
 
 @app.route("/view_user", methods=["POST","GET"])
@@ -175,11 +178,33 @@ def view_user():
             cnx.close()
             return render_template("view_user.html", value=rows)
     else:
-        return redirect(url_for('static', filename='403-forbidden-error.jpg'))
+        return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
 
-@app.route("/view_customer")
+@app.route("/view_customer", methods=["POST","GET"])
 def view_customer():
     if 'user_id' in session:
+        if request.method == "POST" :
+            userDetails = request.form
+            password = userDetails['password']
+            dltcustomer = userDetails['dltcustomer']
+            cnx = connect()
+            with cnx.cursor() as cur:
+                cur.execute("SELECT password FROM users where user_id = %s ",session['user_id'])
+                row = cur.fetchone()
+            cnx.close()
+            if (argon2.verify(password,row[0])):
+                cnx = connect()
+                with cnx.cursor() as cur:
+                    cur.execute("DELETE FROM customers WHERE customer_id =%s",dltcustomer)
+                    cnx.commit()
+                    cnx.close()
+
+                flash("Row Deletion Succesful")
+                return redirect(url_for("view_customer"))
+            else :
+                flash("Please enter the Correct Password ")
+                return redirect(url_for("view_customer"))
+
         if request.args.get("customer_id") :
             customer_id = request.args.get("customer_id")
             cnx = connect()
@@ -196,19 +221,40 @@ def view_customer():
             cnx.close()
             return render_template("view_customer.html", value=rows)
     else :
-        return redirect(url_for('static', filename='403-forbidden-error.jpg'))
+        return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
 
-@app.route("/view_product")
+@app.route("/view_product", methods=["POST","GET"])
 def view_product():
     if 'user_id' in session:
+        if request.method == "POST" :
+            userDetails = request.form
+            password = userDetails['password']
+            dltproduct = userDetails['dltproduct']
+            cnx = connect()
+            with cnx.cursor() as cur:
+                cur.execute("SELECT password FROM users where user_id = %s ",session['user_id'])
+                row = cur.fetchone()
+            cnx.close()
+            if (argon2.verify(password,row[0])):
+                cnx = connect()
+                with cnx.cursor() as cur:
+                    cur.execute("DELETE FROM products WHERE product_id =%s",dltproduct)
+                    cnx.commit()
+                    cnx.close()
+
+                flash("Row Deletion Succesful")
+                return redirect(url_for("view_product"))
+            else :
+                flash("Please enter the Correct Password ")
+                return redirect(url_for("view_product"))
         cnx = connect()
         with cnx.cursor() as cur:
-            cur.execute("SELECT name,barcode,price FROM products")
+            cur.execute("SELECT name,barcode,price,product_id FROM products")
             rows = cur.fetchall()
         cnx.close()
         return render_template("view_product.html", value=rows)
     else:
-        return redirect(url_for('static', filename='403-forbidden-error.jpg'))
+        return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
 
 
 @app.route("/edit_user/<user_id>", methods=["POST","GET"])
@@ -254,7 +300,7 @@ def edit_user(user_id):
             return render_template("edit_user.html",value=rows, user_id=user_id)
 
     else:
-        return redirect(url_for('static', filename='403-forbidden-error.jpg'))
+        return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
 
 @app.route("/edit_product/<product_id>", methods=["POST","GET"])
 def edit_product(product_id):
@@ -282,12 +328,12 @@ def edit_product(product_id):
                 cnx.commit()
                 cnx.close()
                 flash("Records Updated")
-                return redirect(url_for('view_user'))
+                return redirect(url_for('view_product'))
 
         else:
             return render_template("edit_product.html",value=rows ,product_id=product_id)
     else:
-        return redirect(url_for('static', filename='403-forbidden-error.jpg'))
+        return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
 
 @app.route("/edit_customer/<customer_id>", methods=["POST","GET"])
 def edit_customer(customer_id):
@@ -319,7 +365,7 @@ def edit_customer(customer_id):
         else:
             return render_template("edit_customer.html",value=row, customer_id=customer_id)
     else:
-        return redirect(url_for('static', filename='403-forbidden-error.jpg'))
+        return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
 
 
 @app.route("/logout")
@@ -336,7 +382,11 @@ def logout():
 
 @app.route("/sales")
 def sales():
-    return render_template("sales.html")
+    if 'user_id' in session:
+        return render_template("sales.html")
+    else :
+        return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
+
 
 # @app.route("/sw.js")
 # def sw():

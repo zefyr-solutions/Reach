@@ -4,12 +4,15 @@
 
 
 <h1>View Customers</h1>
+<span id = "pass"></span>
 <table border="3px">
   <tr>
     <th>Name</th>
     <th>Email</th>
     <th>Phone no</th>
     <th>Location</th>
+    <th>Edit</th>
+    <th>Delete</th>
   </tr>
   {% for row in value %}
     <tr>
@@ -17,7 +20,19 @@
       <td>{{row[1]}}</td>
       <td>{{row[2]}}</td>
       <td>{{row[3]}}</td>
-    </tr>
+      <td><a href="edit_customer/{{row[4]}}"> <-Edit </a></td>
+        <td>
+       <button id="demo{{row[4]}}">Delete</button>
+        </td>
+      </tr>
+      <script type="text/javascript">
+        document.getElementById("demo{{row[4]}}").addEventListener("click", x);
+          function x() {
+            document.getElementById("pass").innerHTML='<form action="#" method="POST"><div class="form-group"><label for="password">Enter your Password {{session['user_name']}} :</label><input type="password" class="form-control" id="password"  name="password" placeholder="Password" required><input type="hidden" id = "dltcustomer" name="dltcustomer" value={{row[4]}}></div><button type="submit" class="btn btn-primary btn-block">Submit</button></form> {{row[4]}}';
+          }
+
+      </script>
+
   {% endfor %}
 
 </table>
