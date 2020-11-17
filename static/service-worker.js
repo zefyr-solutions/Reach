@@ -1,7 +1,9 @@
 const CACHE_NAME = 'static-cache';
 
 const FILES_TO_CACHE = [
-  // '/templates/index.html' still not working
+  // '/templates/index.html',
+  // '/templates/sales.html',
+  '/static/images/403-forbidden-error.jpg',
   '/static/style/stylesheet.css'
 ]
 
