@@ -387,6 +387,9 @@ def sales():
     else :
         return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
 
+@app.route("/service-worker.js")
+def sw():
+    return app.send_static_file('service-worker.js')
 
 # @app.route("/sw.js")
 # def sw():

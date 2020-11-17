@@ -1,9 +1,20 @@
-window.onload = () => {
-    'use strict';
+// window.onload = () => {
+//     'use strict';
   
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('static/sw.js');
-        console.log('running main')
-    }
-  }
+//     if ('serviceWorker' in navigator) {
+//       navigator.serviceWorker
+//         .register('static/service-worker.js');
+//         console.log('running main')
+//     }
+//   }
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker
+  .register('./service-worker.js')
+  .then(function(registration) {
+    console.log('Service Worker Registered!');
+    return registration;
+  })
+  .catch(function(err) {
+    console.error('Unable to register service worker.', err);
+  });
+}
