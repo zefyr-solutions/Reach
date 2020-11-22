@@ -2,10 +2,10 @@
 {% block title %}View Customers{% endblock %}
 {% block content %}
 
-
 <h1>View Customers</h1>
 <span id = "pass"></span>
-<table border="3px">
+<table class="table">
+  <thead class="thead-light">
   <tr>
     <th>Name</th>
     <th>Email</th>
@@ -22,7 +22,7 @@
       <td>{{row[3]}}</td>
       <td><a href="edit_customer/{{row[4]}}"> <-Edit </a></td>
         <td>
-       <button id="demo{{row[4]}}">Delete</button>
+       <button type="button" id="demo{{row[4]}}" class="btn btn-danger">Delete</button>
         </td>
       </tr>
       <script type="text/javascript">
