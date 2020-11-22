@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, session, flash, url_for, request, make_response, send_from_directory
+from flask import Flask, redirect, render_template, session, flash, url_for, request, make_response, send_from_directory, json
 from flask_mysqldb import MySQL
 from passlib.hash import argon2
 from db import connect
@@ -11,12 +11,11 @@ app.secret_key = "hello"
 
 @app.route("/", methods=["POST", "GET"])
 def home():
-
     if request.method == "POST" :
-
         #If no input, redirect back
         if ((request.form["user_name"] == "") or (request.form["password"] == "")):
             flash("Enter Credentials!")
+            session['flash_box'] = "alert-danger"
             return redirect(url_for("home"))
 
         user_name = request.form["user_name"]
@@ -36,12 +35,15 @@ def home():
                 session["role"] = row[2]
                 session["user_name"] = row[3]
                 flash("Login Succesful")
+                session['flash_box'] = "alert-success"
                 return redirect(url_for("driver"))
             else:
                 flash("Login Failed")
+                session['flash_box'] = "alert-danger"
                 return redirect(url_for("home"))
         else:
             flash("Could not find user")
+            session['flash_box'] = "alert-danger"
             return redirect(url_for("home"))
     else:
         return render_template("index.html")
@@ -347,7 +349,7 @@ def edit_customer(customer_id):
 
             if (request.form["name"] == "" or request.form["phone_no"] == "" or request.form["email"] == "" or request.form["location"] == ""):
                 flash("Enter all the fields")
-                return render_template("edit_customer.html",value=rows, customer_id=customer_id)
+                return render_template("edit_customer.html", value=rows, customer_id=customer_id)
             else:
                 userDetails = request.form
                 name = userDetails['name']
@@ -373,6 +375,7 @@ def logout():
     if 'user_id' in session:
         session.pop('user_id',None)
         flash("You have been logged out")
+        session["flash_box"] = "alert-primary"
 
     if 'role' in session:
         session.pop('role',None)
@@ -387,6 +390,9 @@ def sales():
     else :
         return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
 
+@app.route("/service-worker.js")
+def sw():
+    return app.send_static_file('service-worker.js')
 
 # @app.route("/sw.js")
 # def sw():

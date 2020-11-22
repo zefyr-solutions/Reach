@@ -5,7 +5,8 @@
 
 <h1>View products</h1>
 <span id = "pass"></span>
-<table border="3px">
+<table class="table">
+  <thead class="thead-light">
   <tr>
     <th>Name</th>
     <th>Barcode</th>
@@ -20,7 +21,7 @@
       <td>{{row[2]}}</td>
       <td><a href="edit_product/{{row[3]}}"> <-Edit </a></td>
       <td>
-     <button id="demo{{row[3]}}">Delete</button>
+     <button id="demo{{row[3]}}" class="btn btn-danger">Delete</button>
       </td>
     <script type="text/javascript">
       document.getElementById("demo{{row[3]}}").addEventListener("click", x);

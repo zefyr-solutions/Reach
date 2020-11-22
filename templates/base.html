@@ -9,7 +9,8 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body class="d-flex h-100 text-dark">
-    <div class="alert alert-danger d-flex justify-content-between" id="flash" role="alert">
+    <div class="alert {{ session['flash_box'] }} d-flex justify-content-between" id="flash" role="alert">
+        <!-- {{session.pop('flash_box',None)}} -->
         {% with messages = get_flashed_messages() %}
           {% if messages %}
             <!-- <ul class=flashes> -->
