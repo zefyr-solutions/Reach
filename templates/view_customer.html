@@ -22,19 +22,17 @@
       <td>{{row[3]}}</td>
       <td><a href="edit_customer/{{row[4]}}"> <-Edit </a></td>
         <td>
-       <button type="button" id="demo{{row[4]}}" class="btn btn-danger">Delete</button>
+       <button type="button" onclick="prompt_password({{row[4]}})" id="{{row[4]}}" class="btn btn-danger">Delete</button>
         </td>
       </tr>
-      <script type="text/javascript">
-        document.getElementById("demo{{row[4]}}").addEventListener("click", x);
-          function x() {
-            document.getElementById("pass").innerHTML='<form action="#" method="POST"><div class="form-group"><label for="password">Enter your Password {{session['user_name']}} :</label><input type="password" class="form-control" id="password"  name="password" placeholder="Password" required><input type="hidden" id = "dltcustomer" name="dltcustomer" value={{row[4]}}></div><button type="submit" class="btn btn-primary btn-block">Submit</button></form> {{row[4]}}';
-          }
-
-      </script>
 
   {% endfor %}
 
 </table>
+<script type="text/javascript">
+    function prompt_password(dlt_id) {
+      document.getElementById('pass').innerHTML='<form action="#" method="POST"><div class="form-group"><label for="password">Enter your Password {{session['user_name']}} :</label><input type="password" class="form-control" id="password"  name="password" placeholder="Password" required><input type="hidden" id = "dltcustomer" name="dltcustomer" value='+dlt_id+'></div><button type="submit" class="btn btn-primary btn-block">Submit</button></form>'+dlt_id;
+    }
 
+</script>
 {% endblock %}
