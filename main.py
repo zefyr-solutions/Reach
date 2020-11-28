@@ -65,6 +65,15 @@ def add_user():
                 role = userDetails['role']
                 password = userDetails['password']
                 cpassword = userDetails['cpassword']
+                cnx = connect()
+                with cnx.cursor() as cur:
+                    cur.execute("SELECT user_name FROM users")
+                    usr = cur.fetchall()
+                cnx.close()
+                for u in usr :
+                    if u[0] == username:
+                        flash("User already exists")
+                        return redirect(url_for("add_user"))
                 if password == cpassword:
                     xpassword = argon2.hash(password)
                     cnx = connect()
