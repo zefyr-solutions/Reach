@@ -291,6 +291,15 @@ def edit_user(user_id):
                 password = userDetails['password']
                 npassword = userDetails['npassword']
                 cpassword = userDetails['cpassword']
+                cnx = connect()
+                with cnx.cursor() as cur:
+                    cur.execute("SELECT user_name FROM users")
+                    usr = cur.fetchall()
+                cnx.close()
+                for u in usr :
+                    if u[0] == username:
+                        flash("User already exists")
+                        return redirect(url_for("view_user"))
                 if (argon2.verify(password,rows[5])):
                     if npassword == cpassword:
                         xpassword = argon2.hash(npassword)
