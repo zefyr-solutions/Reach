@@ -5,10 +5,11 @@ from db import connect
 import yaml
 import os
 import pymysql
-
+# Imported all required files
 app = Flask(__name__)
 app.secret_key = "hello"
 
+# Creating the login page
 @app.route("/", methods=["POST", "GET"])
 def home():
     if request.method == "POST" :
@@ -47,16 +48,18 @@ def home():
             return redirect(url_for("home"))
     else:
         return render_template("index.html")
-
+# Creating Add user page
 @app.route("/add_user", methods=["POST","GET"])
 def add_user():
-    if 'user_id' in session:
+    if 'user_id' in session: # Checking if user is logged in or not
         if request.method == 'POST':
 
             if (request.form["name"] == "" or request.form["username"] == "" or request.form["email"] == "" or request.form["phone"] == "" or request.form["password"] == "" or request.form["cpassword"] == ""  or request.form["role"] == ""):
+                # If user misses any fields
                 flash("Enter all the fields")
                 return render_template("add_user.html")
             else:
+                # Inserting the data into database
                 userDetails = request.form
                 name = userDetails['name']
                 username = userDetails['username']
@@ -66,6 +69,7 @@ def add_user():
                 password = userDetails['password']
                 cpassword = userDetails['cpassword']
                 cnx = connect()
+                # Checking if user exists
                 with cnx.cursor() as cur:
                     cur.execute("SELECT user_name FROM users")
                     usr = cur.fetchall()
@@ -90,15 +94,18 @@ def add_user():
                     return render_template("add_user.html")
     else:
         return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
-
+# Creating the Add product page
 @app.route("/add_product", methods=["POST","GET"])
 def add_product():
-    if 'user_id' in session:
+    if 'user_id' in session: # Checking if user is logged in or not
         if request.method == 'POST':
 
             if (request.form["pname"] == "" or request.form["bcode"] == "" or request.form["price"] == "" ):
+                # Checking if all the fields are entered
                 flash("Enter all the fields")
+                return redirect(url_for("add_product"))
             else:
+                # Insering data into database
                 userDetails = request.form
                 pname = userDetails['pname']
                 bcode = userDetails['bcode']
@@ -115,15 +122,18 @@ def add_product():
             return render_template("add_product.html")
     else:
         return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
-
+# Creating Add Customer page
 @app.route("/add_customer", methods=["POST","GET"])
 def add_customer():
-    if 'user_id' in session:
+    if 'user_id' in session:  # Checking if user is logged in or not
         if request.method == 'POST':
 
             if (request.form["name"] == "" or request.form["phone_no"] == "" or request.form["email"] == "" or request.form["location"] == ""):
                 flash("Enter all the fields")
+                return redirect(url_for("add_customer"))
+                # Checking if all the fields are entered
             else:
+                # Insering data into database
                 userDetails = request.form
                 name = userDetails['name']
                 phone_no = userDetails['phone_no']
@@ -144,20 +154,22 @@ def add_customer():
 
 @app.route("/driver")
 def driver():
-    if 'user_id' in session:
+    if 'user_id' in session: # Checking if user is logged in or not
         return render_template("driver.html")
     else :
         return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
 
-
+# Creating view user page
 @app.route("/view_user", methods=["POST","GET"])
 def view_user():
-    if 'user_id' in session:
+    if 'user_id' in session:  # Checking if user is logged in or not
         if request.method == "POST" :
+            # Delete user function
             userDetails = request.form
             password = userDetails['password']
             dltuser = userDetails['dltuser']
             cnx = connect()
+            # Password Checking
             with cnx.cursor() as cur:
                 cur.execute("SELECT password FROM users where user_id = %s ",session['user_id'])
                 row = cur.fetchone()
@@ -174,13 +186,15 @@ def view_user():
             else :
                 flash("Please enter the Correct Password ")
                 return redirect(url_for("view_user"))
-        if request.args.get("customer_id") :
-            customer_id = request.args.get("customer_id")
+        # Returning data of specific user
+        if request.args.get("user_id") :
+            user_id = request.args.get("user_id")
             cnx = connect()
             with cnx.cursor() as cur:
-                cur.execute("SELECT name,email,phone,loaction FROM customers where customer_id = %s ",[customer_id])
+                cur.execute("SELECT user_name,name,email,phone_no,role,user_id FROM users where user_id = %s ",[user_id])
                 row = cur.fetchone()
             return render_template("view_user_specific.html")
+        # Returning data of all users
         else :
             cnx = connect()
             with cnx.cursor() as cur:
@@ -190,15 +204,17 @@ def view_user():
             return render_template("view_user.html", value=rows)
     else:
         return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
-
+# Creating view customer page
 @app.route("/view_customer", methods=["POST","GET"])
 def view_customer():
-    if 'user_id' in session:
+    if 'user_id' in session:  # Checking if user is logged in or not
         if request.method == "POST" :
+            # Delete customer function
             userDetails = request.form
             password = userDetails['password']
             dltcustomer = userDetails['dltcustomer']
             cnx = connect()
+            # Password Checking
             with cnx.cursor() as cur:
                 cur.execute("SELECT password FROM users where user_id = %s ",session['user_id'])
                 row = cur.fetchone()
@@ -215,7 +231,7 @@ def view_customer():
             else :
                 flash("Please enter the Correct Password ")
                 return redirect(url_for("view_customer"))
-
+        # Returning data of specific customer
         if request.args.get("customer_id") :
             customer_id = request.args.get("customer_id")
             cnx = connect()
@@ -224,6 +240,7 @@ def view_customer():
                 row = cur.fetchone()
             cnx.close()
             return render_template("view_customer_specific.html", row=row)
+        # Returning Data of all Customers
         else :
             cnx = connect()
             with cnx.cursor() as cur:
@@ -233,15 +250,17 @@ def view_customer():
             return render_template("view_customer.html", value=rows)
     else :
         return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
-
+# Creating view product page
 @app.route("/view_product", methods=["POST","GET"])
 def view_product():
-    if 'user_id' in session:
+    if 'user_id' in session:  # Checking if user is logged in or not
         if request.method == "POST" :
+            # Delete product Function
             userDetails = request.form
             password = userDetails['password']
             dltproduct = userDetails['dltproduct']
             cnx = connect()
+            # Password Checking
             with cnx.cursor() as cur:
                 cur.execute("SELECT password FROM users where user_id = %s ",session['user_id'])
                 row = cur.fetchone()
@@ -267,10 +286,10 @@ def view_product():
     else:
         return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
 
-
+# Creating Edit user page
 @app.route("/edit_user/<user_id>", methods=["POST","GET"])
 def edit_user(user_id):
-    if 'user_id' in session:
+    if 'user_id' in session:   # Checking if user is logged in or not
         cnx = connect()
         with cnx.cursor() as cur:
             cur.execute("SELECT name,user_name,email,phone_no,role,password FROM users where user_id = %s",user_id)
@@ -281,7 +300,9 @@ def edit_user(user_id):
             if (request.form["name"] == "" or request.form["username"] == "" or request.form["email"] == "" or request.form["phone"] == "" or request.form["password"] == "" or request.form["npassword"] == "" or request.form["cpassword"] == ""  or request.form["role"] == ""):
                 flash("Enter all the fields")
                 return redirect(url_for('edit_user',user_id=user_id))
+                # Checking if all the fields are entered
             else:
+                # Inserting data into database
                 userDetails = request.form
                 name = userDetails['name']
                 username = userDetails['username']
@@ -292,6 +313,7 @@ def edit_user(user_id):
                 npassword = userDetails['npassword']
                 cpassword = userDetails['cpassword']
                 cnx = connect()
+                # Checking if username exists
                 with cnx.cursor() as cur:
                     cur.execute("SELECT user_name FROM users")
                     usr = cur.fetchall()
@@ -321,10 +343,10 @@ def edit_user(user_id):
 
     else:
         return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
-
+# Creating edit product page
 @app.route("/edit_product/<product_id>", methods=["POST","GET"])
 def edit_product(product_id):
-    if 'user_id' in session:
+    if 'user_id' in session:  # Checking if user is logged in or not
         cnx = connect()
         with cnx.cursor() as cur:
             cur.execute("SELECT name,barcode,price,product_id FROM products where product_id = %s",product_id)
@@ -336,8 +358,10 @@ def edit_product(product_id):
             if (request.form["pname"] == "" or request.form["bcode"] == "" or request.form["price"] == "" ):
                 flash("Enter all the fields")
                 return render_template("edit_product.html",value=rows ,product_id=product_id)
+                # Checking if all the fields are entered
 
             else:
+                # Inserting data into database
                 userDetails = request.form
                 pname = userDetails['pname']
                 bcode = userDetails['bcode']
@@ -354,10 +378,10 @@ def edit_product(product_id):
             return render_template("edit_product.html",value=rows ,product_id=product_id)
     else:
         return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
-
+# Creating edit customer page
 @app.route("/edit_customer/<customer_id>", methods=["POST","GET"])
 def edit_customer(customer_id):
-    if 'user_id' in session:
+    if 'user_id' in session:  # Checking if user is logged in or not
         cnx = connect()
         with cnx.cursor() as cur:
             cur.execute("SELECT name,email,phone,location,customer_id FROM customers where customer_id = %s ",customer_id)
@@ -368,7 +392,9 @@ def edit_customer(customer_id):
             if (request.form["name"] == "" or request.form["phone_no"] == "" or request.form["email"] == "" or request.form["location"] == ""):
                 flash("Enter all the fields")
                 return render_template("edit_customer.html", value=rows, customer_id=customer_id)
+                # Checking if all the fields are entered
             else:
+                # Insering data into database
                 userDetails = request.form
                 name = userDetails['name']
                 phone_no = userDetails['phone_no']
@@ -387,10 +413,10 @@ def edit_customer(customer_id):
     else:
         return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
 
-
+# Creating logout function
 @app.route("/logout")
 def logout():
-    if 'user_id' in session:
+    if 'user_id' in session: # Checking if user is logged in or not
         session.pop('user_id',None)
         flash("You have been logged out")
         session["flash_box"] = "alert-primary"
@@ -400,14 +426,14 @@ def logout():
 
     return redirect(url_for('home'))
 
-
+# Creating sales page
 @app.route("/sales")
 def sales():
-    if 'user_id' in session:
+    if 'user_id' in session:  # Checking if user is logged in or not
         return render_template("sales.html")
     else :
         return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
-
+# Creating service worker initiation page
 @app.route("/service-worker.js")
 def sw():
     return app.send_static_file('service-worker.js')
