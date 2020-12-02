@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, session, flash, url_for, request, make_response, send_from_directory, json
+from flask import Flask, redirect, render_template, session, flash, url_for, request, make_response, send_from_directory, json, jsonify
 from flask_mysqldb import MySQL
 from passlib.hash import argon2
 from db import connect
@@ -412,6 +412,18 @@ def sales():
 def sw():
     return app.send_static_file('service-worker.js')
 
+@app.route("/username_check", methods=["POST","GET"])
+def autocomplete() :
+    search_term = request.form['username']
+    cnx = connect()
+    with cnx.cursor() as cur:
+        cur.execute("SELECT user_name FROM users WHERE user_name LIKE %s ",(search_term))
+        rows = cur.fetchall()
+    cnx.close()
+    if rows :
+        return "username not available"
+    else :
+        return "available"
 # @app.route("/sw.js")
 # def sw():
 #     response = make_response(send_from_directory('static',filename='sw.js'))
