@@ -5,9 +5,20 @@ from db import connect
 import yaml
 import os
 import pymysql
+from werkzeug.utils import secure_filename
+import datetime
 # Imported all required files
+UPLOAD_FOLDER = '/uploads/product_pic/'
+ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+
 app = Flask(__name__)
 app.secret_key = "hello"
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # Creating the login page
 @app.route("/", methods=["POST", "GET"])
@@ -105,16 +116,32 @@ def add_product():
                 flash("Enter all the fields")
                 return redirect(url_for("add_product"))
             else:
-                # Insering data into database
+                # Inserting data into database
                 userDetails = request.form
                 pname = userDetails['pname']
                 bcode = userDetails['bcode']
                 price = userDetails['price']
+                # check if the post request has the file part
+                if 'product_pic' not in request.files:
+                    flash('No file part')
+                    return redirect(url_for("add_product"))
+                file = request.files['product_pic']
+                # if user does not select file, browser also
+                # submit an empty part without filename
+                if file.filename == '':
+                    flash('No selected file')
+                    return redirect(url_for("add_product"))
+                if file and allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    ct = datetime.datetime.now().strftime("%m-%d-%Y-%H-%M-%S")
+                    uid = str(session['user_id'])
+                    fname = ct + uid + filename
+                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], fname))
                 cnx = connect()
                 with cnx.cursor() as cur:
-                    cur.execute("INSERT INTO products(name,barcode,price) VALUES(%s,%s,%s)",(pname,bcode,price))
-                cnx.commit()
-                cnx.close()
+                    cur.execute("INSERT INTO products(name,barcode,price,product_pic) VALUES(%s,%s,%s,%s)",(pname,bcode,price,fname))
+                    cnx.commit()
+                    cnx.close()
                 flash("Records inserted")
                 return redirect(url_for("view_product"))
 
@@ -133,7 +160,7 @@ def add_customer():
                 return redirect(url_for("add_customer"))
                 # Checking if all the fields are entered
             else:
-                # Insering data into database
+                # Inserting data into database
                 userDetails = request.form
                 name = userDetails['name']
                 phone_no = userDetails['phone_no']
@@ -394,7 +421,7 @@ def edit_customer(customer_id):
                 return render_template("edit_customer.html", value=rows, customer_id=customer_id)
                 # Checking if all the fields are entered
             else:
-                # Insering data into database
+                # Inserting data into database
                 userDetails = request.form
                 name = userDetails['name']
                 phone_no = userDetails['phone_no']
@@ -427,12 +454,26 @@ def logout():
     return redirect(url_for('home'))
 
 # Creating sales page
-@app.route("/sales")
+@app.route("/sales",methods=["POST","GET"])
 def sales():
     if 'user_id' in session:  # Checking if user is logged in or not
         return render_template("sales.html")
     else :
         return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
+
+# Creating profile page
+@app.route("/profile", methods=["POST","GET"])
+def profile():
+    if user_id in session: #Checking id user is logged in or not
+        cnx = connect()
+        with cnx.cursor() as cur:
+            cur.execute("SELECT user_name,name,email,phone_no,role FROM users WHERE user_id = %s", session['user_id'])
+            rows = cur.fetchone()
+        cnx.close()
+        return render_template("profile.html",value = rows)
+    else:
+        return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
+
 # Creating service worker initiation page
 @app.route("/service-worker.js")
 def sw():
