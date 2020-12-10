@@ -1,20 +1,25 @@
 {% extends 'base.html' %}
 {% block title %}Home{% endblock %}
 {% block content %}
-<div class="container">
+<div class="flex-auto w-full bg-cover bg-no-repeat overflow-hidden" style="background-image: url(/static/images/warehouse.jpg);">
   <h2 class="m-4">Login!</h2>
-  <form method = "post" class="w-100">
-    <div class="form-group">
+</div>
+<div class="flex flex-col items-center w-full">
+  <form method = "post" class="flex flex-col space-y-2 items-center justify-center w-full py-10">
       <!-- <label for="exampleInputEmail1">User name</label> -->
-      <input type="text" class="form-control p-4" id="exampleInputEmail1" name="user_name" placeholder="Enter UserId">
-    </div>
-    <div class="form-group">
+      <input type="text" class="p-2 px-6 rounded-md border-2 w-9/12" id="exampleInputEmail1" name="user_name" placeholder="Enter UserId">
+      
+      <div class="relative flex items-center w-9/12">
       <!-- <label for="exampleInputPassword1">Password</label> -->
-      <input type="password" class="form-control p-4" id="exampleInputPassword1" name="password" placeholder="Password">
-    </div>
-    <div class="form-group form-check">
+      <input type="password" class="p-2 px-6 rounded-md border-2 w-full" id="exampleInputPassword1" name="password" placeholder="Password">
+      <svg onclick="Showpass()" class="field-icon w-4 h4 text-gray-400 float-right absolute top-3.5 right-3 hover:text-gray-800 cursor-pointer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+      </svg>
+      </div>
+    <!-- <div class="flex items-center justify-center w-full">
       <input type="checkbox" class="form-check-input" onclick="Showpass()" id="exampleCheck1">
-      <label class="form-check-label" for="exampleCheck1">Show Password</label>
+      <label class="form-check-label" for="exampleCheck1">Show Password</label></div>-->
       <script type="text/javascript">
         function Showpass() {
           var x = document.getElementById("exampleInputPassword1");
@@ -26,8 +31,7 @@
           }
         }
       </script>
-    </div>
-    <button type="submit" class="btn btn-primary btn-block p-3">Submit</button>
+      <button type="submit" class="bg-indigo-500 p-2 w-9/12 rounded-md text-white hover:shadow-lg transform hover:scale-105 transition focus:text-indigo-900 focus:ring-offset-indigo-900 focus:ring-2 focus:bg-indigo-50 focus:outline-none">Submit</button>
   </form>
 </div>
 {% endblock %}
