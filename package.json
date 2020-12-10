@@ -1,0 +1,25 @@
+{
+  "name": "Reach",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tailwind build static/src/style.css -o static/style/tailwind.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zefyr-solutions/Reach.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zefyr-solutions/Reach/issues"
+  },
+  "homepage": "https://github.com/zefyr-solutions/Reach#readme",
+  "dependencies": {
+    "autoprefixer": "^10.1.0",
+    "postcss": "^8.2.1",
+    "tailwindcss": "^2.0.1"
+  }
+}
