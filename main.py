@@ -1,5 +1,4 @@
 from flask import Flask, redirect, render_template, session, flash, url_for, request, make_response, send_from_directory, json, jsonify
-from flask_mysqldb import MySQL
 from passlib.hash import argon2
 from db import connect
 import yaml
@@ -427,12 +426,38 @@ def logout():
     return redirect(url_for('home'))
 
 # Creating sales page
-@app.route("/sales")
+@app.route("/sales", methods=["POST","GET"])
 def sales():
-    if 'user_id' in session:  # Checking if user is logged in or not
+    # Checking if user is logged in or not
+    if 'user_id' in session:
+        if request.method == 'POST':
+
+            if (request.form["customer_name"] == "" or request.form["product_name"] == "" or request.form["qty"] == ""):
+                flash("Enter all the fields")
+                return redirect(url_for("add_customer"))
+            else:
+                # Insering data into database
+                cnx = connect()
+                with cnx.cursor() as cur:
+                    # To get customer id from database using customer name provided by user
+                    cur.execute("SELECT customer_id FROM customers WHERE name = %s", request.form['customer_name'])
+                    customer_id = cur.fetchone()[0]
+                    # To get product id from database using product name provided by user
+                    cur.execute("SELECT product_id FROM products WHERE name = %s", request.form['product_name'])
+                    product_id = cur.fetchone()[0]
+                    # Inserting data to database
+                    cur.execute('''INSERT INTO sales (customer_id, product_id, user_id, quantity) VALUES (%s,%s,%s,%s)
+                                            ''', (customer_id, product_id, session["user_id"], request.form['qty']))
+                    cnx.commit()
+                    cnx.close()
+                flash("Records inserted")
+                return redirect(url_for("/driver"))
+
         return render_template("sales.html")
     else :
         return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
+
+
 # Creating service worker initiation page
 @app.route("/service-worker.js")
 def sw():
