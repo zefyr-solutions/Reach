@@ -464,7 +464,7 @@ def sw():
     return app.send_static_file('service-worker.js')
 
 @app.route("/username_check", methods=["POST","GET"])
-def autocomplete() :
+def username_check() :
     search_term = request.form['username']
     cnx = connect()
     with cnx.cursor() as cur:
@@ -475,6 +475,25 @@ def autocomplete() :
         return "username not available"
     else :
         return "available"
+
+@app.route("/test", methods=["POST","GET"])
+def test() :
+    return render_template("autocomplete_test.html")
+
+@app.route("/autocomplete", methods=["POST","GET"])
+def autocomplete() :
+    search_term = request.form['term']
+    cnx = connect()
+    with cnx.cursor() as cur:
+        cur.execute("SELECT user_name FROM users WHERE user_name LIKE %s ",(search_term))
+        rows = cur.fetchall()
+    cnx.close()
+    if rows :
+        return "username not available"
+    else :
+        return "available"
+
+
 # @app.route("/sw.js")
 # def sw():
 #     response = make_response(send_from_directory('static',filename='sw.js'))
