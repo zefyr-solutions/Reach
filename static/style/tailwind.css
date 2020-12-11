@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
 /*! modern-normalize v1.0.0 | MIT License | https://github.com/sindresorhus/modern-normalize */
 
@@ -11220,8 +11220,8 @@ video {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
-.font-opensans{
-  font-family: Open Sans;
+.font-roboto{
+  font-family: Roboto;
 }
 
 .font-thin{
@@ -41846,8 +41846,8 @@ video {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   }
 
-  .sm\:font-opensans{
-    font-family: Open Sans;
+  .sm\:font-roboto{
+    font-family: Roboto;
   }
 
   .sm\:font-thin{
@@ -72394,8 +72394,8 @@ video {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   }
 
-  .md\:font-opensans{
-    font-family: Open Sans;
+  .md\:font-roboto{
+    font-family: Roboto;
   }
 
   .md\:font-thin{
@@ -102942,8 +102942,8 @@ video {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   }
 
-  .lg\:font-opensans{
-    font-family: Open Sans;
+  .lg\:font-roboto{
+    font-family: Roboto;
   }
 
   .lg\:font-thin{
@@ -133490,8 +133490,8 @@ video {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   }
 
-  .xl\:font-opensans{
-    font-family: Open Sans;
+  .xl\:font-roboto{
+    font-family: Roboto;
   }
 
   .xl\:font-thin{
@@ -164038,8 +164038,8 @@ video {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   }
 
-  .\32xl\:font-opensans{
-    font-family: Open Sans;
+  .\32xl\:font-roboto{
+    font-family: Roboto;
   }
 
   .\32xl\:font-thin{
