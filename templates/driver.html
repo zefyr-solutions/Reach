@@ -2,10 +2,30 @@
 {% block title %}Driver{% endblock %}
 {% block content %}
 
-<div class="container">
-  <div class="d-flex flex-column p-3 mt-3">
-    <a class="btn btn-primary d-block flex-fill p-5 mb-3" href="#" role="button"><h3>Report</h3></a>
-    <a class="btn btn-primary d-block flex-fill p-5 mt-3 align-items-end" href="/sales" role="button"><h3>Sale</h3></a>
+<div class="flex flex-col max-w-screen-lg lg:rounded lg:m-3 lg:shadow-lg bg-white h-screen items-center md:flex-row md:px-10 lg:px-16">
+  <div class="flex-auto w-full p-4 flex flex-col justify-center">
+    <h1 class="text-4xl sm:text-5xl text-gray-600 font-bold font-roboto">Agent</h1>
+    <h1 class="text-lg sm:text-3xl text-gray-400">This is Agents Dashboard</h1>
+  </div>
+  <div class="grid gap-4 grid-cols-2 grid-rows-4 md:w-1/2">
+    <a class="row-span-2 flex items-center justify-center rounded bg-indigo-500 px-8 py-4" href="#">
+      <span class="text-white tracking-wider">Report</span>
+    </a>
+    <a class="row-span-2 flex items-center justify-center rounded bg-indigo-500 px-8 py-4" href="/sales">
+      <span class="text-white tracking-wider">Sales</span>
+    </a>
+
+    <a class="flex items-center justify-center rounded bg-indigo-500 px-8 py-4" href="#">
+      <span class="text-white tracking-wider">Product</span>
+    </a>
+    <a class="flex items-center justify-center rounded bg-indigo-500 px-8 py-4" href="#">
+      <span class="text-white tracking-wider">Notification</span>
+    </a>
+
+    <a class="col-span-2 flex items-center justify-center rounded bg-indigo-500 px-8 py-4" href="#">
+      <span class="text-white tracking-wider">Customer</span>
+    </a>
   </div>
 </div>
+
 {% endblock  %}
