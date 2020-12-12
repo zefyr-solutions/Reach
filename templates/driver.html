@@ -2,29 +2,51 @@
 {% block title %}Driver{% endblock %}
 {% block content %}
 
-<div class="flex flex-col max-w-screen-lg lg:rounded lg:m-3 lg:shadow-lg bg-white h-screen items-center md:flex-row md:px-10 lg:px-16">
-  <div class="flex-auto w-full p-4 flex flex-col justify-center">
-    <h1 class="text-4xl sm:text-5xl text-gray-600 font-bold font-roboto">Agent</h1>
-    <h1 class="text-lg sm:text-3xl text-gray-400">This is Agents Dashboard</h1>
+<div class="flex flex-col w-full lg:max-w-screen-lg overflow-hidden lg:rounded lg:shadow-lg bg-white h-screen items-center md:flex-row justify-between">
+  <div class="px-10 lg:px-16 py-10 h-full w-full flex flex-col justify-between">
+  <div class="flex-1 w-full p-4 flex flex-col justify-center h-1/3">
+    <h1 class="text-4xl sm:text-5xl text-gray-600 font-bold font-roboto pb-3">Agent</h1>
+    <h1 class="text-base sm:text-xl text-gray-400">This is Agents Dashboard</h1>
   </div>
-  <div class="grid gap-4 grid-cols-2 grid-rows-4 md:w-1/2">
-    <a class="row-span-2 flex items-center justify-center rounded bg-indigo-500 px-8 py-4" href="#">
-      <span class="text-white tracking-wider">Report</span>
+  <div class="grid gap-4 grid-cols-2 grid-rows-4 h-2/3">
+    <a class="row-span-2 flex items-center justify-center rounded bg-indigo-500 px-8 py-4 hover:shadow-md hover:bg-indigo-600 transition" href="#">
+      <span class="text-white tracking-wider text-2xl">Report</span>
     </a>
-    <a class="row-span-2 flex items-center justify-center rounded bg-indigo-500 px-8 py-4" href="/sales">
-      <span class="text-white tracking-wider">Sales</span>
-    </a>
-
-    <a class="flex items-center justify-center rounded bg-indigo-500 px-8 py-4" href="#">
-      <span class="text-white tracking-wider">Product</span>
-    </a>
-    <a class="flex items-center justify-center rounded bg-indigo-500 px-8 py-4" href="#">
-      <span class="text-white tracking-wider">Notification</span>
+    <a class="row-span-2 flex items-center justify-center rounded bg-indigo-500 px-8 py-4 hover:shadow-md hover:bg-indigo-600 transition" href="/sales">
+      <span class="text-white tracking-wider text-2xl">Sales</span>
     </a>
 
-    <a class="col-span-2 flex items-center justify-center rounded bg-indigo-500 px-8 py-4" href="#">
-      <span class="text-white tracking-wider">Customer</span>
+    <a class="flex items-center justify-center rounded bg-indigo-500 px-8 py-4 hover:shadow-md hover:bg-indigo-600 transition" href="#">
+      <span class="text-white tracking-wider text-2xl">Product</span>
     </a>
+    <a class="flex items-center justify-center rounded bg-indigo-500 px-8 py-4 hover:shadow-md hover:bg-indigo-600 transition" href="#">
+      <span class="text-white tracking-wider text-2xl">Notification</span>
+    </a>
+
+    <a class="col-span-2 flex items-center justify-center rounded bg-indigo-500 px-8 py-4 hover:shadow-md hover:bg-indigo-600 transition" href="#">
+      <span class="text-white tracking-wider text-2xl">Customer</span>
+    </a>
+  </div>
+  </div>
+  <div class="bg-gray-300 h-full hidden md:block">
+    <div class="p-6 py-12 h-full flex flex-col justify-between">
+      <ul class="space-y-5">
+        <li class="text-gray-600">
+          Logout
+        </li>
+        <li class="text-gray-600">
+          Profile
+        </li>
+      </ul>
+      <ul class="space-y-5">
+        <li class="text-gray-600">
+          Feedback
+        </li>
+        <li class="text-gray-600">
+          About
+        </li>
+      </ul>
+    </div>
   </div>
 </div>
 
