@@ -25,3 +25,4 @@ __pycache__/
 /package.json
 /postcss.config.js
 /tailwind.config.js
+/static/src/style.css
