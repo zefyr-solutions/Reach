@@ -276,6 +276,7 @@ def view_customer():
             return render_template("view_customer.html", value=rows)
     else :
         return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
+        
 # Creating view product page
 @app.route("/view_product", methods=["POST","GET"])
 def view_product():
@@ -404,6 +405,7 @@ def edit_product(product_id):
             return render_template("edit_product.html",value=rows ,product_id=product_id)
     else:
         return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
+
 # Creating edit customer page
 @app.route("/edit_customer/<customer_id>", methods=["POST","GET"])
 def edit_customer(customer_id):
@@ -502,8 +504,10 @@ def profile():
 def sw():
     return app.send_static_file('service-worker.js')
 
+
+# Route to return data to autocomplete (Availabilty of username)
 @app.route("/username_check", methods=["POST","GET"])
-def autocomplete() :
+def username_check() :
     search_term = request.form['username']
     cnx = connect()
     with cnx.cursor() as cur:
@@ -514,12 +518,26 @@ def autocomplete() :
         return "username not available"
     else :
         return "available"
-# @app.route("/sw.js")
-# def sw():
-#     response = make_response(send_from_directory('static',filename='sw.js'))
-#     response.headers['content-type'] = 'application/javascript'
-#     # response.headers['Service-Worker-Allowed:'] = '/'
-#     return response
+
+
+# This route is used for testing new features
+@app.route("/test", methods=["POST","GET"])
+def test() :
+    return render_template("autocomplete_test.html")
+
+
+# Route to return data required for autocompletion of customer name
+@app.route("/autocomplete_customer_name", methods=["POST","GET"])
+def autocomplete_customer_name () :
+    search_term = request.args.get("term")
+    print("search = ", search_term)
+    cnx = connect()
+    with cnx.cursor(pymysql.cursors.DictCursor) as cur:
+        cur.execute(f"SELECT name AS label FROM customers WHERE name LIKE '%{search_term}%' " )
+        rows = cur.fetchall()
+    cnx.close()
+    return jsonify(rows)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
