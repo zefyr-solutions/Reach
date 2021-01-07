@@ -487,7 +487,7 @@ def sales():
 # Creating profile page
 @app.route("/profile", methods=["POST","GET"])
 def profile():
-    if user_id in session: #Checking id user is logged in or not
+    if 'user_id' in session: #Checking id user is logged in or not
         cnx = connect()
         with cnx.cursor() as cur:
             cur.execute("SELECT user_name,name,email,phone_no,role FROM users WHERE user_id = %s", session['user_id'])
