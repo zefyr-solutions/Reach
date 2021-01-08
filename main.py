@@ -7,7 +7,8 @@ import pymysql
 from werkzeug.utils import secure_filename
 import datetime
 # Imported all required files
-UPLOAD_FOLDER = '/uploads/product_pic/'
+cwd = os.getcwd()
+UPLOAD_FOLDER = cwd +'/uploads/product_pic/'
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
@@ -276,7 +277,7 @@ def view_customer():
             return render_template("view_customer.html", value=rows)
     else :
         return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
-        
+
 # Creating view product page
 @app.route("/view_product", methods=["POST","GET"])
 def view_product():
