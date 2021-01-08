@@ -538,6 +538,9 @@ def autocomplete_customer_name () :
     cnx.close()
     return jsonify(rows)
 
+@app.route("/report")
+def report() :
+    return render_template("report.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
