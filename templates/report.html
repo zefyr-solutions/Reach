@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Report{% endblock %}
+{% block content %}
+<div>
+    <script type="text/javascript">
+    google.charts.load("current", {packages:["corechart"]});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+        ['Day', 'sale'],
+        ['monday',     11],
+        ['Eat',      2],
+        ['Commute',  2],
+        ['Watch TV', 2],
+        ['Sleep',    7]
+      ]);
+
+      var options = {
+        title: 'Weekly sale',
+        is3D: true,
+      };
+
+      var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+      chart.draw(data, options);
+    }
+    </script>
+    <div id="piechart_3d" style="width: 900px; height: 500px;"></div>
+</div>
+<div class="m-8">
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['bar']});
+        google.charts.setOnLoadCallback(drawStuff);
+  
+        function drawStuff() {
+          var data = new google.visualization.arrayToDataTable([
+            ['Opening Move', 'Percentage'],
+            ["King's pawn (e4)", 44],
+            ["Queen's pawn (d4)", 31],
+            ["Knight to King 3 (Nf3)", 12],
+            ["Queen's bishop pawn (c4)", 10],
+            ['Other', 3]
+          ]);
+  
+          var options = {
+            title: 'Overall sale',
+            width: 900,
+            legend: { position: 'none' },
+            chart: { title: 'Overall sale',
+                     subtitle: 'popularity by percentage' },
+            bars: 'horizontal', // Required for Material Bar Charts.
+            axes: {
+              x: {
+                0: { side: 'top', label: 'Percentage'} // Top x-axis.
+              }
+            },
+            bar: { groupWidth: "90%" }
+          };
+  
+          var chart = new google.charts.Bar(document.getElementById('top_x_div'));
+          chart.draw(data, options);
+        };
+      </script>
+      <div id="top_x_div" style="width: 900px; height: 500px;"></div>
+</div>
+{%  endblock %}

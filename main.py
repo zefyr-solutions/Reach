@@ -27,7 +27,7 @@ def home():
         #If no input, redirect back
         if ((request.form["user_name"] == "") or (request.form["password"] == "")):
             flash("Enter Credentials!")
-            session['flash_box'] = "alert-danger"
+            session['alertFlash'] = "bg-red-400 text-red-900"
             return redirect(url_for("home"))
 
         user_name = request.form["user_name"]
@@ -47,15 +47,15 @@ def home():
                 session["role"] = row[2]
                 session["user_name"] = row[3]
                 flash("Login Succesful")
-                session['flash_box'] = "alert-success"
+                session['alertFlash'] = "bg-green-400 text-green-900"
                 return redirect(url_for("driver"))
             else:
                 flash("Login Failed")
-                session['flash_box'] = "alert-danger"
+                session['alertFlash'] = "bg-red-400 text-red-900"
                 return redirect(url_for("home"))
         else:
             flash("Could not find user")
-            session['flash_box'] = "alert-danger"
+            session['alertFlash'] = "bg-red-400 text-red-900"
             return redirect(url_for("home"))
     else:
         return render_template("index.html")
@@ -448,7 +448,7 @@ def logout():
     if 'user_id' in session: # Checking if user is logged in or not
         session.pop('user_id',None)
         flash("You have been logged out")
-        session["flash_box"] = "alert-primary"
+        session["alertFlash"] = "bg-red-400 text-red-900"
 
     if 'role' in session:
         session.pop('role',None)
@@ -539,6 +539,9 @@ def autocomplete_customer_name () :
     cnx.close()
     return jsonify(rows)
 
+@app.route("/report")
+def report() :
+    return render_template("report.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
