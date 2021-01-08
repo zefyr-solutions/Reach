@@ -146,7 +146,7 @@ def add_product():
                 return redirect(url_for("view_product"))
 
         else:
-            return render_template("add_product.html")
+            return render_template("add_product.html", value=UPLOAD_FOLDER)
     else:
         return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
 # Creating Add Customer page
