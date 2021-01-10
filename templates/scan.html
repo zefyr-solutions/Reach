@@ -25,7 +25,7 @@
         console.log(last);
         console.log(cameras);
         if(cameras.length>0){
-            scanner.start(last-1);
+            scanner.start(cameras[last-1]);
         }else{
             console.error('No cameras found.');
             alert('No cameras found.');
