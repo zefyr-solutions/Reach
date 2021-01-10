@@ -6,6 +6,7 @@ import os
 import pymysql
 from werkzeug.utils import secure_filename
 import datetime
+
 # Imported all required files
 UPLOAD_FOLDER = '/uploads/product_pic/'
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
@@ -58,6 +59,7 @@ def home():
             return redirect(url_for("home"))
     else:
         return render_template("index.html")
+
 # Creating Add user page
 @app.route("/add_user", methods=["POST","GET"])
 def add_user():
@@ -104,6 +106,7 @@ def add_user():
                     return render_template("add_user.html")
     else:
         return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
+
 # Creating the Add product page
 @app.route("/add_product", methods=["POST","GET"])
 def add_product():
@@ -454,13 +457,45 @@ def logout():
 
     return redirect(url_for('home'))
 
+#Page for scanning QR codes
+@app.route("/scan",methods=["POST","GET"])
+def scan():
+    if 'user_id' in session:
+        return render_template("scan.html")
+    else :
+        return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
+
 # Creating sales page
 @app.route("/sales",methods=["POST","GET"])
 def sales():
+
     # Checking if user is logged in or not
     if 'user_id' in session:
-        if request.method == 'POST':
 
+        if request.method == 'GET' :
+
+            # If the method is GET , It may be redirected from QRscan(customer id will be passed as GET parametre) page
+            # or it can also be direct GET request from home page.
+            # Route will render all necessary information by checking database if it is redirected from scan page.
+            # Else, all fields will be empty.
+            if request.args.get('customer_id') is not None:
+
+                # If GET("Customer_id") is present, all details will be collected from databse using customer_id
+                # and will be passed to render template
+                customer_id = request.args.get('customer_id')
+                cnx = connect()
+                with cnx.cursor() as cur:
+                    cur.execute("SELECT name,email,phone,location,customer_id FROM customers where customer_id = %s ",customer_id)
+                    row = cur.fetchone()
+                cnx.close()
+                return render_template("sales.html", customer_details = row)
+            else :
+                # If no GET("customer_id") is present, render template without any details
+                return render_template("sales.html")
+
+        else :
+            #If method is POST, save all details to database if it pass data validation
+            #or direct back if there is any error
             if (request.form["customer_name"] == "" or request.form["product_name"] == "" or request.form["qty"] == ""):
                 flash("Enter all the fields")
                 return redirect(url_for("add_customer"))
@@ -479,10 +514,10 @@ def sales():
                                             ''', (customer_id, product_id, session["user_id"], request.form['qty']))
                     cnx.commit()
                     cnx.close()
+    
                 flash("Records inserted")
                 return redirect(url_for("/driver"))
 
-        return render_template("sales.html")
     else :
         return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
 
@@ -523,7 +558,7 @@ def username_check() :
 # This route is used for testing new features
 @app.route("/test", methods=["POST","GET"])
 def test() :
-    return render_template("autocomplete_test.html")
+    return render_template("test.html")
 
 
 # Route to return data required for autocompletion of customer name

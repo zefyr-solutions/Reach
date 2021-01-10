@@ -1,6 +1,13 @@
 {% extends 'base.html'%}
 {% block title %} Sales {% endblock %}
 {% block content %}
+
+{% if customer_details : %}
+{% set name = customer_details[0] %}
+{% else : %}
+{% set name = "" %}
+{% endif %}
+
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -8,7 +15,7 @@
 <form action="#" method="post">
   <div class="form-group">
     <label for="customer_name">Name customer</label>
-    <input type="text" class="form-control" id="customer_name" name="customer_name" placeholder="Enter Name of Customer">
+    <input type="text" class="form-control" id="customer_name"  value="{{name}}" name="customer_name" placeholder="Enter Name of Customer">
   </div>
   <div class="form-group">
     <label for="product_name">Product Name:</label>
