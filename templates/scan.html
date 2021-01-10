@@ -20,13 +20,12 @@
         //window.location.href=content;
     });
     Instascan.Camera.getCameras().then(function (cameras){
+        // select last camera as it will probably be the back camera
         last = cameras.length;
         console.log(last);
-        // alert(JSON.stringify(cameras, null, 4));
-        // alert(JSON.stringify(final_camera, null, 4));
         console.log(cameras);
         if(cameras.length>0){
-            scanner.start(cameras[0]);
+            scanner.start(last-1);
         }else{
             console.error('No cameras found.');
             alert('No cameras found.');
