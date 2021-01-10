@@ -8,7 +8,8 @@ from werkzeug.utils import secure_filename
 import datetime
 
 # Imported all required files
-UPLOAD_FOLDER = '/uploads/product_pic/'
+cwd = os.getcwd()
+UPLOAD_FOLDER = cwd +'/uploads/product_pic/'
 ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
@@ -27,7 +28,7 @@ def home():
         #If no input, redirect back
         if ((request.form["user_name"] == "") or (request.form["password"] == "")):
             flash("Enter Credentials!")
-            session['flash_box'] = "alert-danger"
+            session['alertFlash'] = "bg-red-400 text-red-900"
             return redirect(url_for("home"))
 
         user_name = request.form["user_name"]
@@ -47,15 +48,15 @@ def home():
                 session["role"] = row[2]
                 session["user_name"] = row[3]
                 flash("Login Succesful")
-                session['flash_box'] = "alert-success"
+                session['alertFlash'] = "bg-green-400 text-green-900"
                 return redirect(url_for("driver"))
             else:
                 flash("Login Failed")
-                session['flash_box'] = "alert-danger"
+                session['alertFlash'] = "bg-red-400 text-red-900"
                 return redirect(url_for("home"))
         else:
             flash("Could not find user")
-            session['flash_box'] = "alert-danger"
+            session['alertFlash'] = "bg-red-400 text-red-900"
             return redirect(url_for("home"))
     else:
         return render_template("index.html")
@@ -148,7 +149,7 @@ def add_product():
                 return redirect(url_for("view_product"))
 
         else:
-            return render_template("add_product.html")
+            return render_template("add_product.html", value=UPLOAD_FOLDER)
     else:
         return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
 # Creating Add Customer page
@@ -279,7 +280,7 @@ def view_customer():
             return render_template("view_customer.html", value=rows)
     else :
         return redirect(url_for('static', filename='images/403-forbidden-error.jpg'))
-        
+
 # Creating view product page
 @app.route("/view_product", methods=["POST","GET"])
 def view_product():
@@ -450,7 +451,7 @@ def logout():
     if 'user_id' in session: # Checking if user is logged in or not
         session.pop('user_id',None)
         flash("You have been logged out")
-        session["flash_box"] = "alert-primary"
+        session["alertFlash"] = "bg-red-400 text-red-900"
 
     if 'role' in session:
         session.pop('role',None)
@@ -524,7 +525,7 @@ def sales():
 # Creating profile page
 @app.route("/profile", methods=["POST","GET"])
 def profile():
-    if user_id in session: #Checking id user is logged in or not
+    if 'user_id' in session: #Checking id user is logged in or not
         cnx = connect()
         with cnx.cursor() as cur:
             cur.execute("SELECT user_name,name,email,phone_no,role FROM users WHERE user_id = %s", session['user_id'])
@@ -573,6 +574,9 @@ def autocomplete_customer_name () :
     cnx.close()
     return jsonify(rows)
 
+@app.route("/report")
+def report() :
+    return render_template("report.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
